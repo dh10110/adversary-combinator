@@ -1,0 +1,225 @@
+:root {
+	--leading-color: blue;
+	--following-color: purple;
+}
+
+
+html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-height: 100%;
+	font-family: sans-serif;
+	display: grid;
+	grid-template-columns: 1fr;
+}
+h2, h3 {
+	margin: 0;
+}
+.page {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	background-color: #fff;
+	/*height: 100vh;*/
+}
+.adv-chooser {
+	display: grid;
+	flex-wrap: wrap;
+	gap: 1ch;
+	grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+	/*grid-template-rows: 30rem;*/
+}
+.adv-chooser > li {
+	list-style: none;
+	display: grid;
+}
+.sel-adv-lead {
+	/*outline: 1px solid var(--leading-color);*/
+	border-color: blue;
+	outline-offset: 3px;
+}
+.sel-adv-follow {
+	outline: 1px solid var(--following-color);
+	/*border-color: purple;*/
+	outline-offset: 3px;
+}
+.adv-choice {
+	border: 1px solid silver;
+	border-radius: 5px;
+	/*width: 10rem;*/
+	height: 4rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+}
+.adv-choice > img {
+	max-width: 38px;
+}
+.adv-name > small {
+	color: #888;
+}
+
+.play > section {
+	display: grid;
+	grid-template-columns: 0fr 1fr;
+	align-items: center;
+	gap: 1ch;
+}
+
+.play > section > h3 {
+	color: #888;
+	font-size: 90%;
+}
+.invader {
+	letter-spacing: 0.2ch;
+	font-weight: bolder;
+}
+.fear-deck {
+	display: flex;
+	gap: 1ch;
+	align-items: center;
+}
+.tl {
+	height: 1rem;
+}
+.tldiv:after {
+	width: 1.5ch;
+	display: inline-block;
+}
+.tl3:after {
+	/*color: #f00;*/
+	content: url(./img/tl3.svg);
+}
+.tl2:after {
+	/*color: #c80;*/
+	content: url(./img/tl2.svg);
+}
+.icon {
+	height: 1rem;
+	max-width: 1rem;
+	vertical-align: text-bottom;
+}
+/*
+.range {
+	display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+.range > b {
+    margin-bottom: -0.25rem;
+    font-size: 1.1rem;
+}
+.range > img {
+	width: 2.2rem;
+}
+*/
+.inline-range {
+    background-image: url(./img/RangeArrow.svg);
+    width: 2.4rem;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+}
+.effect-flag {
+	display: inline-flex;
+	align-items: center;
+	height: fit-content;
+    border-radius: 0 0.5rem 0.5rem 0;
+    background-color: #555;
+    padding: 1px;
+    padding-right: 0.3rem;
+	color: #eee;
+}
+.effect-flag > img {
+	width: 2em;
+	margin-right: 2px;
+}
+.itemText {
+	display: flex;
+	gap: 1ch;
+	align-items: center;
+}
+.effect-text > .title {
+	font-size: smaller;
+}
+.adv-sel {
+
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
+
+}
+.sel-adv-lead {
+    border: 1px solid var(--leading-color);
+}
+.sel-adv-follow {
+    border: 1px solid var(--following-color);
+}
+#adv-sel-lead-lvl {
+	accent-color: var(--leading-color);
+}
+#adv-sel-follow-lvl {
+	accent-color: var(--following-color);
+}
+.adv-sel > img {
+
+    grid-row: 1;
+    grid-column: 1;
+    opacity: 0.3;
+
+}
+.adv-sel > div {
+
+    grid-row: 1;
+    grid-column: 1;
+    text-shadow: 0 0 2px white, 0 0 3px white, 0 0 4px white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    z-index: 1;
+
+}
+button {
+	cursor: pointer;
+}
+input[type=range] { cursor: pointer; }
+
+.popup-container {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stays in place */
+  z-index: 99; /* Sits on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.fear-deck {
+	font-weight: bold;
+}

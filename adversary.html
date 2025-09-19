@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Adversary Info</title>
+	<link rel="stylesheet" href="adversary.css" />
+</head>
+<body>
+
+	<datalist id="levels">
+		<option>0</option>
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+		<option>5</option>
+		<option>6</option>
+	</datalist>
+
+	<div class="page select">
+		<h2>Select</h2>
+	
+		<section style="display: flex; gap: 1ch;">
+			
+			<div style="display: flex; flex-direction: column; align-items: center;	">
+				<h3>Adversary</h3>
+				<button id="adv-sel-lead" class="adv-sel" data-mode="lead">
+					<img id="lead-flag" src="./img/flag-svg/eng.svg" />
+					<div>
+						<span id="lead-name">England</span>
+						<span id="lead-level">1</span>
+					</div>
+				</button>
+				<label>Level
+					<input id="adv-sel-lead-lvl" type="range" value="1" max="6" list="levels" data-mode="lead" />
+				</label>
+			</div>
+			
+			<button id="adv-sel-swap" title="Swap Lead and Follower">
+				↔
+			</button>
+			
+			<div style="display: flex; flex-direction: column; align-items: center;">
+				<h3>Follower</h3>
+				<button id="adv-sel-follow" class="adv-sel" data-mode="follow">
+					<img id="follow-flag" src="./img/flag-svg/sco.svg" />
+					<div>
+						<span id="follow-name">None</span>
+						<span id="follow-level"></span>
+					</div>
+				</button>
+				<label>Level
+					<input id="adv-sel-follow-lvl" type="range" value="1" max="6" list="levels" data-mode="follow" />
+				</label>
+			</div>
+
+		</section>
+
+
+		<section>
+			<h3>Difficulty</h3>
+			<div>Difficulty: <span id="difficulty"></span></div>
+		</section>
+		
+		<section>
+			<h3>Combine</h3>
+			<button id="execute-combine">Combine</button>
+		</section>
+	</div>
+	
+	<div class="page setup play">
+		<h2>Setup</h2>
+		<!--
+		<section>
+			<h3>Fear</h3>
+			<div class="fear-deck">3 <span class="tldiv tl2"></span> 4 <span class="tldiv tl3"></span> 3</div>
+			<h3>Fear</h3>
+			<div class="fear-deck">3 <img class="tl" src="./img/tl2.svg" /> 4 <img class="tl" src="./img/tl3.svg" /> 3</div>
+			<h3>Invader</h3>
+			<div >
+			<span class="invader">111</span> · <span class="invader">2222</span> · <span class="invader">33333</span>
+			</div>
+		</section>
+		-->
+		<section id="setup-effects">
+		</section>
+	</div>
+	<div class="page play">
+		<h2>In-Play</h2>
+		
+		<section id="play-effects">
+		</section>
+		<!--
+		<section>
+			<h3>Loss</h3>
+			<div>
+				None
+			</div>
+			<h3>Ravage</h3>
+			<div>
+				<p></p>
+			</div>
+			<h3>Build</h3>
+			<div>
+				<p></p>
+			</div>
+			<h3>Escalation</h3>
+			<div>
+				<p></p>
+			</div>
+			<h3>Explore</h3>
+			<div>
+				<p></p>
+			</div>
+		</section>
+		-->
+	</div>
+	
+	<template id="levelItem">
+		<h3 class="itemType"></h3>
+		<div class="itemText">
+			
+		</div>
+	</template>
+	
+	<div class="page play">
+		<h2>All Effects</h2>
+		<section id="debug"></section>
+	</div>
+	
+	
+	<script src="adv-data.js"></script>
+	<script src="adversary.js"></script>
+	
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="no"?>
+<svg width="160px" height="96px" viewBox="0 0 50 30"
+ version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<desc>Flag of Scotland</desc>
+	
+	<rect x="0" y="0" width="50" height="30" fill="#005EB8" />
+
+	<rect x="-30" y="-3" width="60" height="6" fill="#FFFFFF" transform="translate(25 15) rotate(31)" />
+	<rect x="-30" y="-3" width="60" height="6" fill="#FFFFFF" transform="translate(25 15) rotate(-31)" />
+	
+</svg>
