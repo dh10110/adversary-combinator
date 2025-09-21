@@ -10,7 +10,7 @@
 <body>
 
 	<datalist id="levels">
-		<option>0</option>
+		<!-- <option>0</option> -->
 		<option>1</option>
 		<option>2</option>
 		<option>3</option>
@@ -34,6 +34,7 @@
 					</div>
 				</button>
 				<label>Level
+					<output id="adv-sel-lead-lvl-out"></output>
 					<input id="adv-sel-lead-lvl" type="range" value="1" max="6" list="levels" data-mode="lead" />
 				</label>
 			</div>
@@ -52,6 +53,7 @@
 					</div>
 				</button>
 				<label>Level
+					<output id="adv-sel-follow-lvl-out"></output>
 					<input id="adv-sel-follow-lvl" type="range" value="1" max="6" list="levels" data-mode="follow" />
 				</label>
 			</div>
@@ -61,7 +63,7 @@
 
 		<section>
 			<h3>Difficulty</h3>
-			<div>Difficulty: <span id="difficulty"></span></div>
+			<div>Difficulty: <output id="difficulty"></output></div>
 		</section>
 		
 		<section>

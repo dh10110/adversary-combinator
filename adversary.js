@@ -53,6 +53,9 @@ ADV = (function () {
 			$slider.value = level;
 		}
 
+		const $levelOut = document.getElementById(`adv-sel-${mode}-lvl-out`);
+		$levelOut.value = level;
+
 	}
 
 	function getLeadDifficulty() {
@@ -98,15 +101,16 @@ ADV = (function () {
 	
 	
 	const iconReplacements = {
-		city: '<img src="./img/City.svg" class="icon" />',
-		town: '<img src="./img/Town.svg" class="icon" />',
-		explorer: '<img src="./img/Explorer.svg" class="icon" />',	
-		fear: '<img src="./img/Fear.svg" class="icon" />',	
-		blight: '<img src="./img/Blight.svg" class="icon" />',	
-		dahan: '<img src="./img/Dahan.svg" class="icon" />',	
-		beasts: '<img src="./img/Beasts.svg" class="icon" />',
-		disease: '<img src="./img/Disease.svg" class="icon" />',
-		presence: '<img src="./img/Presence.svg" class="icon" />',
+		city: '<img src="./img/icon/City.svg" class="icon" />',
+		town: '<img src="./img/icon/Town.svg" class="icon" />',
+		explorer: '<img src="./img/icon/Explorer.svg" class="icon" />',	
+		fear: '<img src="./img/icon/Fear.svg" class="icon" />',	
+		blight: '<img src="./img/icon/Blight.svg" class="icon" />',	
+		dahan: '<img src="./img/icon/Dahan.svg" class="icon" />',	
+		beasts: '<img src="./img/icon/Beasts.svg" class="icon" />',
+		disease: '<img src="./img/icon/Disease.svg" class="icon" />',
+		presence: '<img src="./img/icon/Presence.svg" class="icon" />',
+		fast: '<img src="./img/icon/Fast.svg" class="icon clr-fast" />',
 	};
 	
 	const iconRegex = /\[([A-Za-z]+)\]/g;
@@ -275,6 +279,7 @@ ADV = (function () {
 				container.style.display = 'none';
 				e.stopPropagation();
 				updateDifficulty();
+				listSelectedEffects();
 			}
 		}, true);
 		
@@ -292,11 +297,15 @@ ADV = (function () {
 	function wireLevelSetters() {
 		const sliders = document.querySelectorAll('input[type=range][data-mode]');
 		sliders.forEach(function (elem) {
-			elem.addEventListener('change', function (e) {
+			elem.addEventListener('input', function (e) {
 				const mode = e.currentTarget.dataset['mode'];
 				setLevel(mode, e.currentTarget.value);
 				updateDifficulty();
 			});
+
+			elem.addEventListener('change', function (e) {
+				listSelectedEffects();
+			}, true);
 		});
 		
 	}
@@ -593,7 +602,7 @@ ADV = (function () {
 	
 	function escHtml(esc) {
 		switch (esc) {
-			case 2: return 'Escalation <img src="./img/Escalation.svg" class="icon" />: ';
+			case 2: return 'Escalation <img src="./img/icon/Escalation.svg" class="icon" />: ';
 			case 3: return 'Escalation Ⅲ: ';
 		}
 		return '';
@@ -665,7 +674,7 @@ ADV = (function () {
 			const type = clone.querySelector('.itemType');
 			type.textContent = effectKey || effect.effectKey || effect.EffectType;
 			const text = clone.querySelector('.itemText');
-			text.innerHTML = `<b class="effect-flag">${flagFor(effect.adversary.Code)}${effect.lvl}</b><div class="effect-text"><b class="title">${(effect.escalation ? '<img src="./img/Escalation.svg" class="icon" /> ' : '')}${effect.EffectName}</b> ${prettyHtml(effect.EffectText)} <i>${prettyHtml(effect.ExtraText)}</i></div>` ;
+			text.innerHTML = `<b class="effect-flag">${flagFor(effect.adversary.Code)}${effect.lvl}</b><div class="effect-text"><b class="title">${(effect.escalation ? '<img src="./img/icon/Escalation.svg" class="icon" /> ' : '')}${effect.EffectName}</b> ${prettyHtml(effect.EffectText)} <i>${prettyHtml(effect.ExtraText)}</i></div>` ;
 			itemList.appendChild(clone);
 		}
 		
