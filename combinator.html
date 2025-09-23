@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adversary Combinator</title>
+    <link rel="stylesheet" href="combinator.css" />
+</head>
+<body>
+    
+    <header>
+        <h1>Adversary Combinator</h1>
+    </header>
+    <section id="main-section">
+        <aside></aside>
+        <main>
+            <datalist id="level-list">
+                <!-- <option>0</option> -->
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+            </datalist>
+
+            <section class="adversary-selection">
+                <article id="leader-selection">
+                    <h2>Leader</h2>
+                    <button>
+                        <output data-adv-id="bp">
+                            <span>The Kingdom of</span> <span><span>Brandenburg-</span>Prussia<span></span>
+                        </output>
+                    </button>
+                    <label>
+                        <span>Level <output>1</output></span>
+                        <input type="range" min="0" max="6" value="1" list="level-list" />
+                    </label>
+                </article>
+                <button id="swap-adversaries" title="Swap Leader and Follower">
+                    ↔
+                </button>
+                <article id="follower-selection">
+                    <h2>Follower</h2>
+                    <button>
+                        <output data-adv-id="NONE">
+                            <span>NONE</span>
+                        </output>
+                    </button>
+                    <label>
+                        <span>Level <output></output></span>
+                        <input type="range" min="0" max="6" value="1" list="level-list" />
+                    </label>
+                </article>
+            </section>
+
+            <section class="asg">
+                <h2>Adversary</h2>
+                <button class="chooser">
+                    <output data-adv-id="bp">
+                        <span>The Kingdom of</span> <span><span>Brandenburg-</span>Prussia<span></span>
+                    </output>
+                </button>
+                <label>
+                    Level <output>1</output>
+                </label>
+                <input id="" type="range" min="0" max="6" value="1" list="level-list" />
+                <button class="swapper">↔</button>
+                <h2>Follower</h2>
+                <button class="chooser">
+                    <output data-adv-id="eng">
+                        <span>The Kingdom of</span> <span>England</span>
+                    </output>
+                </button>
+                <label>
+                    Level <output>1</output>
+                </label>
+                <input id="" type="range" min="0" max="6" value="1" list="level-list" />
+            </section>
+
+        </main>
+        <aside></aside>
+    </section>
+    <footer>
+        <p>Adversary Combinator &copy; 2024 David Hogg</p>
+    </footer>
+
+    <script type="module" src="module/combinator.mjs"></script>
+</body>
+</html>
