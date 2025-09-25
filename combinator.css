@@ -8,7 +8,7 @@
     --follower-color: oklch(from var(--theme-color) l c 120);
 }
 
-html, body { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 
 body {
     font-family: sans-serif;
@@ -17,52 +17,45 @@ body {
     min-block-size: 100vb;
     display: grid;
     grid-template-rows: auto 1fr auto;
-}
+    
+    > header {
+        padding: 0.5rem 1rem;
+        background-color: var(--header-bg);
+        color: var(--header-fg);
+        background-image: linear-gradient(to right, var(--leader-color), var(--follower-color));
 
-#main-section {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    @media (width > 900px) {
-        
-        
-        grid-template-rows: auto;
-        grid-template-columns: 200px 1fr 200px;
-        
+        h1 {
+            margin: 0;
+            font-size: 125%;
+        }
     }
-        
-}
 
-header {
-    padding: 0.5rem 1rem;
-    background-color: var(--header-bg);
-    color: var(--header-fg);
-    background-image: linear-gradient(to right, var(--leader-color), var(--follower-color));
+    > main{
+        padding: 1ch;
+    }
 
-    h1 {
-        margin: 0;
-        font-size: 125%;
+    > footer {
+        font-size: small;
+        padding: 0.25em;
+        margin-top: 1ch;
+        padding-top: 1ch;
+        text-align: right;
+
+        > p {
+            margin: 0;
+        }
     }
 }
 
-footer {
-    font-size: small;
-    padding: 0.25em;
-    text-align: right;
-}
-footer > p {
-    margin: 0;
-}
-aside {
-    display: none;
-}
+button { cursor: pointer; }
 
-.asg {
+/* .asg {
     display: grid;
     grid-template-areas:
         "lhdr lhdr swap fhdr fhdr"
         "lbtn lbtn swap fbtn fbtn"
         "llbl lsli swap flbl fsli";
-    grid-template-columns: auto 1fr auto 1fr auto;
+    grid-template-columns: 3em 1fr auto 3em 1fr;
 
     gap: 0.5ch;
     margin-block: 0.5ch;
@@ -116,60 +109,114 @@ aside {
         grid-area: fsli;
     }
 }
+ */
 
 .adversary-selection {
     display: grid;
-    grid-template-columns: [l0] 5em [l1] 1fr [l2] auto [f0] 5em [f1] 1fr [f2];
-    grid-template-rows: auto 5em auto;
-    gap: 1ch;
-    margin-inline: 1ch;
-    max-width: 25em;
+    grid-template-columns: 1fr auto 1fr;
+
+    column-gap: 0.5ch;
+    max-width: 65ch;
+    margin-inline: auto;
     
     > button {
-        grid-column: l2 / f0;
-        grid-row: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25em;
     }
-    > #leader-selection {
-        --local-color: var(--leader-color);
-        grid-column: l0 / l2;
-    }
-    > #follower-selection {
-        --local-color: var(--follower-color);
-        grid-column: f0 / f2;
-    }
+
+
     > article {
         display: grid;
-        grid-row: 1 / -1;
-        grid-template-columns: subgrid;
-        grid-template-rows: subgrid;
-        
+        grid-template-rows: auto 1fr auto;
+
+        &#leader-selection {
+            --local-color: var(--leader-color);
+        }
+        &#follower-selection {
+            --local-color: var(--follower-color);
+            > h2 {
+                text-align: right;
+            }
+        }
+        &[data-adv="NONE"] > label {
+            visibility: hidden;
+        }     
+
         > h2 {
             margin: 0.1em;
             font-size: 100%;
-            grid-row: 1 / 2;
-            grid-column: 1 / 3;
         }
         > button {
-            grid-row: 2 / 3;
-            grid-column: 1 / 3;
-            display: block;
-            /* block-size: 10em; */
             aspect-ratio: 3/2;
         }
         > label {
-            grid-row: 3 / 4;
-            grid-column: 1 / 3;
             display: grid;
-            grid-template-columns: subgrid;
+            grid-template-columns: auto 1fr;
             align-items: center;
+            font-size: smaller;
         }
         [type="range"] {
-            /*grid-row: 3 / 4;*/
-            /*grid-column: 2 / 3;*/
             accent-color: var(--local-color);
-            max-width: 8em;
         }
     }
 
 }
 
+.adversary-selection > dialog {
+    --local-color: #888;
+    border-color: var(--local-color);
+    padding: 0;
+
+    > header {
+        background-color: var(--local-color);
+        color: var(--header-fg);
+        margin: auto;
+        > h2 {
+            margin: 0;
+            font-size: normal;
+        }
+    }
+    ul {
+        margin: 0;
+        padding: 1ch;
+        list-style: none;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5ch;
+        margin-inline: auto;
+
+        > li {
+            min-width: 15ch;
+            width: 32%;
+            aspect-ratio: 3/2;
+            display: grid;
+        }
+    }
+
+    
+    &[data-mode=leader] {
+        --local-color: var(--leader-color);
+    }
+    &[data-mode=follow] {
+        --local-color: var(--follower-color);
+    }
+
+    &::backdrop {
+        background-color: rgb(from var(--local-color) r g b / 0.1);
+    }
+
+}
+
+
+.icon {
+    max-width: 1em;
+    max-height: 1em;
+}
+.keep-together {
+    /* display: inline-block; */
+    white-space: nowrap;
+}
