@@ -9,16 +9,16 @@ export function makeEffectElement(e) {
 
 
 const iconReplacements = {
-    city: '<img src="./img/icon/City.svg" class="icon" title="City" />',
-    town: '<img src="./img/icon/Town.svg" class="icon" title="Town" />',
-    explorer: '<img src="./img/icon/Explorer.svg" class="icon" title="Explorer" />',
-    fear: '<img src="./img/icon/Fear.svg" class="icon" title="Fear" />',
-    blight: '<img src="./img/icon/Blight.svg" class="icon" title="Blight" />',
-    dahan: '<img src="./img/icon/Dahan.svg" class="icon" />',
-    beasts: '<img src="./img/icon/Beasts.svg" class="icon" />',
-    disease: '<img src="./img/icon/Disease.svg" class="icon" />',
-    presence: '<img src="./img/icon/Presence.svg" class="icon" />',
-    fast: '<img src="./img/icon/Fast.svg" class="icon clr-fast" />',
+    city: '<img src="./img/icon/City.svg" class="icon" alt="City" />',
+    town: '<img src="./img/icon/Town.svg" class="icon" alt="Town" />',
+    explorer: '<img src="./img/icon/Explorer.svg" class="icon" alt="Explorer" />',
+    fear: '<img src="./img/icon/Fear.svg" class="icon" alt="Fear" />',
+    blight: '<img src="./img/icon/Blight.svg" class="icon" alt="Blight" />',
+    dahan: '<img src="./img/icon/Dahan.svg" class="icon" alt="Dahan" />',
+    beasts: '<img src="./img/icon/Beasts.svg" class="icon" alt="Beasts" />',
+    disease: '<img src="./img/icon/Disease.svg" class="icon" alt="Disease" />',
+    presence: '<img src="./img/icon/Presence.svg" class="icon" alt="Presence" />',
+    fast: '<img src="./img/icon/Fast.svg" class="icon clr-fast" alt="Fast" />',
 };
 
 
@@ -44,7 +44,7 @@ function stageMatch(match, g1) {
 const rxfIcon = String.raw`\[([A-Za-z]+)\]`;
 
 const rxLandNum = /land #[1-8]/g;
-const rxIconTogether = new RegExp(`([0-9+] )?${rxfIcon}(/${rxfIcon})?[.,]?`, 'ig');
+const rxIconTogether = new RegExp(`((?:[0-9]+|a|no) )?${rxfIcon}(/${rxfIcon})?[.,]?`, 'ig');
 
 function keepTogether(match) {
     return `<span class="keep-together">${match}</span>`;

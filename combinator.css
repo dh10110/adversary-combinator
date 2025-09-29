@@ -8,9 +8,9 @@
     --follower-color: oklch(from var(--theme-color) l c 120);
 }
 
-html, body { margin: 0; padding: 0; }
-
 body {
+    margin: 0;
+    padding: 0;
     font-family: sans-serif;
     background-color: var(--bg);
     color: var(--fg);
@@ -48,6 +48,7 @@ body {
 }
 
 button { cursor: pointer; }
+[type="range"] { cursor: pointer; }
 
 /* .asg {
     display: grid;
@@ -196,6 +197,30 @@ button { cursor: pointer; }
             display: grid;
         }
     }
+    button {
+        --sel-color: silver;
+
+        &[data-sel=leader] {
+            --sel-color: var(--leader-color);
+        }
+        &[data-sel=follow] {
+            --sel-color: var(--follower-color);
+        }
+
+        &[data-sel] {
+            border-color: var(--sel-color);
+            outline: 1px solid var(--sel-color);
+        }
+
+        & [data-mode] {
+            display: none;
+        }
+        &[data-sel=leader] [data-mode=leader],
+        &[data-sel=follow] [data-mode=follow] {
+            display: block;
+            color: var(--sel-color);
+        }   
+    }
 
     
     &[data-mode=leader] {
@@ -219,4 +244,53 @@ button { cursor: pointer; }
 .keep-together {
     /* display: inline-block; */
     white-space: nowrap;
+}
+
+.flag-button {
+    display: grid;
+    grid-template-areas: 'a';
+    align-items: center;
+    padding: 0.5ch;
+
+    --flag-bg: url(./img/flag-svg/none.svg);
+
+    background-image: radial-gradient(rgb(from white r g b / 50%) 0%, rgb(from white r g b / 20%) 100%),
+        var(--flag-bg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    text-shadow: white 0 0 1px, white 0 0 3px, white 0 0 6px;
+
+    border: 1px solid silver;
+    border-radius: 3px;
+
+    &:hover {
+        filter: brightness(1.1);
+    }
+
+
+    & > * {
+        grid-area: a;
+        z-index: 1;
+    }
+
+    & > [data-mode="leader"] {
+        align-self: end;
+        justify-self: start;
+    }
+
+    & > [data-mode="follow"] {
+        align-self: end;
+        justify-self: end;
+    }
+
+    & .flag-text {
+        justify-self: center;
+        padding: 1ch;
+        background-color: rgb(255 255 255 / 0.8);
+        border-radius: 1ch;
+        corner-shape: scoop;
+    }
+    
 }

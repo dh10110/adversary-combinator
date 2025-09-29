@@ -3,7 +3,7 @@
  version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<desc>Flag of Habsburg Monarchy</desc>
 	
-	<rect x="0" y="0" width="40" height="15" fill="#000000" />
-	<rect x="0" y="15" width="40" height="15" fill="#FFDD11" />
+	<rect x="0" y="0" width="40" height="15" fill="#FFDD11" />
+	<rect x="0" y="15" width="40" height="15" fill="#444444" />
 	
 </svg>

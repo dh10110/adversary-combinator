@@ -24,44 +24,94 @@ function refreshSelectionDisplay(mode) {
     const adv = sel.adversary || 'NONE';
     $chooser.dataset.adv = adv;
     
+    const $btn = $chooser.querySelector('button');
     const $name = $chooser.querySelector('[data-ref="name"]');
     const $level = $chooser.querySelector('[data-ref="level"]');
     
     if (adv === 'NONE') {
         $name.textContent = 'NONE';
         $level.textContent = '';
+        $btn.style.removeProperty('--flag-bg');
     } else {
         const a = officialData.find(a => a.adv === adv);
         $name.textContent = a.fullname;
         $level.textContent = `Level ${sel.level}`;
+        $btn.style.setProperty('--flag-bg', `url('./img/flag-svg/${a.adv}.svg')`);
     }
 
+    //dialog items
+    const $dialog = document.querySelector('.adversary-selection dialog');
+    const $buttons = $dialog.querySelectorAll(`button[data-sel="${mode}"]`);
+    $buttons.forEach($b => {
+        delete $b.dataset.sel;
+    });
+    const $selButton = $dialog.querySelector(`button[data-adv="${adv}"]`);
+    if ($selButton) {
+        $selButton.dataset.sel = mode;
+    }
 
+}
+
+function refreshLevelSlider(mode) {
+    const $slider = document.querySelector(`.adversary-selection [data-mode="${mode}"] input[type="range"]`);
+    $slider.value = selections[mode].level;
 }
 
 
 export function initializeChooserUi() {
     const $dialog = document.querySelector('.adversary-selection dialog');
     fillAdversaryList($dialog);
-    initializeDialogHandlers($dialog);
+    wireDialog($dialog);
+    wireSwapButton();
+    wireLevelSlider('leader');
+    wireLevelSlider('follow');
 }
+
+const divLeaderTag = `
+    <div data-mode="leader" title="Leader Adversary">⬢</div>
+`;
+const divFollowerTag = `
+    <div data-mode="follow" title="Follower Adversary">▲</div>
+`;
 
 function fillAdversaryList($dialog) {
     const $ul = $dialog.querySelector('ul');
 
     //No Adversary
     const li = document.createElement('li');
-    li.innerHTML = `<button type="submit" data-adv="NONE" title="No Adversary">No Adversary</button>`;
+    li.innerHTML = `<button type="submit" class="flag-button" data-adv="NONE" title="No Adversary"><div class="flag-text">No Adversary</div></button>`;
     $ul.appendChild(li);
 
+    //Add Official Adversaries
     officialData.forEach(a => {
         const li = document.createElement('li');
-        li.innerHTML = `<button type="submit" data-adv="${a.adv}" title="${a.fullname}">${a.nickname}</button>`;
+        li.innerHTML = `
+            <button type="submit" class="flag-button" data-adv="${a.adv}" title="${a.fullname}"
+                    style="--flag-bg: url('./img/flag-svg/${a.adv}.svg')">
+                <div class="flag-text">
+                    <div>${a.fullname}</div>
+                </div>
+                ${divLeaderTag}
+                ${divFollowerTag}
+            </button>
+        `;
         $ul.appendChild(li);
     });
 }
 
-function initializeDialogHandlers($dialog) {
+function wireSwapButton() {
+    const $swap = document.getElementById('swap-adversaries');
+    $swap.addEventListener('click', e => {
+        const temp = selections.leader;
+        selections.leader = selections.follow;
+        selections.follow = temp;
+        refreshSelectionsDisplay();
+        refreshLevelSlider('leader');
+        refreshLevelSlider('follow');
+    });
+}
+
+function wireDialog($dialog) {
     const $form = $dialog.querySelector('form');
     $form.addEventListener('submit', e => {
         e.preventDefault();
@@ -80,5 +130,14 @@ function initializeDialogHandlers($dialog) {
             $dialog.dataset.mode = $c.dataset.mode;
             $dialog.showModal();
         });
+    });
+}
+
+function wireLevelSlider(mode) {
+    const $slider = document.querySelector(`.adversary-selection [data-mode="${mode}"] input[type="range"]`);
+    $slider.addEventListener('input', e => {
+        const val = parseInt($slider.value);
+        selections[mode].level = val;
+        refreshSelectionDisplay(mode);
     });
 }
