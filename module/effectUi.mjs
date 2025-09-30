@@ -1,5 +1,6 @@
-import officialData from "../official.json" with { type: "json" };
+import officialData from "../data/official.json" with { type: "json" };
 import { SelPair } from "./models.mjs";
+import { buildTimingTree } from "./timing.mjs";
 
 export function makeEffectElement(e) {
     const html = `
@@ -129,6 +130,8 @@ export function combineAdversaries(selection) {
 
     //All Other Effects: Setup/Play Leader/Follower
 
+    const timingTree = buildTimingTree();
+
     const groupedEffects = {};
     function addEffect(order, effect) {
         const groupKey = 'k' + order;
@@ -137,6 +140,7 @@ export function combineAdversaries(selection) {
             groupedEffects[groupKey] = group = { order: order, effects: [] };
         }
         group.effects.push(effect);
+        timingTree.addEffect(effect);
     }
 
     
@@ -172,7 +176,7 @@ export function combineAdversaries(selection) {
     const fear = addFear(leaderLevel.fear, followLevel.fear);
     $setup.appendChild(makeFearElement(fear));
 
-
+/*
     //Other Effects
     for (const groupKey in groupedEffects) {
         const group = groupedEffects[groupKey];
@@ -181,5 +185,19 @@ export function combineAdversaries(selection) {
         group.effects.forEach(e => $box.appendChild(makeEffectElement(e)));
         
     }
+*/
 
+    showEffects(timingTree.children['1000'], $setup);
+    showEffects(timingTree.children['2000'], $play);
+
+}
+
+function showEffects(period, $box) {
+    $box.appendChild(`<h3>${period.title}</h3>`);
+    period.effects['1'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    period.effects['2'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    period.effects['5'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    period.children.forEach(c => showEffects(c, $box));
+    period.effects['8'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    period.effects['9'].forEach(e => $box.appendChild(makeEffectElement(e)));
 }
