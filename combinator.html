@@ -29,7 +29,7 @@
                 <h2>Leader</h2>
                 <button class="flag-button" title="Select Leader Adversary">
                     <div class="flag-text">
-                        <div data-ref="name">NONE</div>
+                        <div data-ref="name">No Adversary</div>
                         <div data-ref="level"></div>
                     </div>
                 </button>
@@ -47,7 +47,7 @@
                 <h2>Follower</h2>
                 <button class="flag-button" title="Select Follower Adversary">
                     <div class="flag-text">
-                        <div data-ref="name">NONE</div>
+                        <div data-ref="name">No Adversary</div>
                         <div data-ref="level"></div>
                     </div>
                 </button>
@@ -66,12 +66,30 @@
                 </form>
             </dialog>
 
+            <section>
+                <button id="combine-button">Combine</button>
+            </section>
+
         </section>
 
 
-        <section id="debug">
+        <section id="setup-effects" class="effect-list">
+            <h2>At Setup</h2>
+
+            <ul><!--Filled Dynamically--></ul>
+
+        </section>
+
+        <section id="play-effects" class="effect-list">
+            <h2>During Play</h2>
+
+            <ul><!--Filled Dynamically--></ul>
+
+        </section>
+
+        <section  class="effect-list">
             <h2>Debug Effects</h2>
-            
+            <ul id="debug"></ul>
         </section>
     </main>
 

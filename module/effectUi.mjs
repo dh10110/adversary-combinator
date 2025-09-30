@@ -1,10 +1,51 @@
 import officialData from "../official.json" with { type: "json" };
+import { SelPair } from "./models.mjs";
 
 export function makeEffectElement(e) {
-    const html = `<b>${e.name}</b> ${enhanceText(e.text)} <i>${e.xtext || ''}</i>`;
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div;
+    const html = `
+<article data-ref="${e.ref}" class="adversary-effect">
+    <span class="altag">
+        <span class="altag_flag" style="--flag-bg: url('./img/flag-svg/${e.adv}.svg')"></span>
+        <output class="altag_level">${e.lvl}</output>
+    </span>
+    <div class="effect-detail">
+        <div class="effect-name">
+            ${e.type === 'loss' ? "Loss Condition" : ""}
+            ${e.type === 'esc' ? "Escalation" : ""}
+        </div>
+        <div>
+            <output class="effect-name">${e.name}</output>
+            <output class="effect-text">${enhanceText(e.text)}</output>
+            <output class="effect-xtext">${enhanceText(e.xtext)}</output>
+        </div>
+    </div>
+</article>
+    `;
+    const li = document.createElement('li');
+    li.innerHTML = html;
+    return li;
+}
+
+function makeFearElement(fear) {
+    const html = `
+<article data-ref="fear" class="adversary-effect">
+    <span class="altag">
+        Fear
+    </span>
+    <div class="effect-detail">
+        <div>
+            ${fear[0]}
+            <img class="tl" src="./img/tl2.svg" />
+            ${fear[1]}
+            <img class="tl" src="./img/tl3.svg" />
+            ${fear[2]}
+        </div>
+    </div>
+</article>
+    `;
+    const li = document.createElement('li');
+    li.innerHTML = html;
+    return li;
 }
 
 
@@ -64,4 +105,81 @@ function prettyHtml(text) {
 
 export function enhanceText(text) {
     return prettyHtml(text);
+}
+
+
+function addFear(l, f) {
+    return [
+        3 + l[0] + f[0],
+        3 + l[1] + f[1],
+        3 + l[2] + f[2]
+    ];
+}
+
+
+/**
+ * 
+ * @param {SelPair} selection 
+ */
+export function combineAdversaries(selection) {
+    
+    //TODO: Handle weird input
+
+    //Invader Deck Effects: follower, then leader
+
+    //All Other Effects: Setup/Play Leader/Follower
+
+    const groupedEffects = {};
+    function addEffect(order, effect) {
+        const groupKey = 'k' + order;
+        let group = groupedEffects[groupKey];
+        if (!group) {
+            groupedEffects[groupKey] = group = { order: order, effects: [] };
+        }
+        group.effects.push(effect);
+    }
+
+    
+
+    const leader = officialData.filter(x => x.adv === selection.leader.adversary)[0] || { effects: [] };
+    const follow = officialData.filter(x => x.adv === selection.follow.adversary)[0] || { effects: [] };
+    const leaderInv = [];
+    leader.effects.forEach(e => {
+        if (e.lvl > selection.leader.level) { return; }
+        if (e.inv) { leaderInv.push(e); return; }
+        e.order.forEach(o => addEffect(o, e));
+    });
+    follow.effects.forEach(e => {
+        if (e.lvl > selection.follow.level) { return; }
+        e.order.forEach(o => addEffect(o, e));
+    })
+    leaderInv.forEach(e => {
+        e.order.forEach(o => addEffect(o, e));
+    });
+
+    const leaderLevel = leader.levels.filter(x => x.lvl === selection.leader.level)[0] || {};
+    const followLevel = follow.levels.filter(x => x.lvl === selection.follow.level)[0] || {};
+
+    const $setup = document.querySelector('#setup-effects > ul');
+    const $play = document.querySelector('#play-effects > ul');
+    $setup.innerHTML = '';
+    $play.innerHTML = '';
+
+    //Invader Deck
+
+
+    //Fear Deck
+    const fear = addFear(leaderLevel.fear, followLevel.fear);
+    $setup.appendChild(makeFearElement(fear));
+
+
+    //Other Effects
+    for (const groupKey in groupedEffects) {
+        const group = groupedEffects[groupKey];
+        const $box = group.order < 2000 ? $setup : $play;
+
+        group.effects.forEach(e => $box.appendChild(makeEffectElement(e)));
+        
+    }
+
 }

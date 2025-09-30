@@ -1,16 +1,8 @@
 import officialData from "../official.json" with { type: "json" };
+import { SelPair } from "./models.mjs";
+import { combineAdversaries } from "./effectUi.mjs";
 
-class SelAdv {
-    constructor() {
-        this.adversary = null;
-        this.level = 1;
-    }
-}
-
-const selections = {
-    leader: new SelAdv(),
-    follow: new SelAdv(),
-};
+const selections = new SelPair();
 
 function refreshSelectionsDisplay() {
     refreshSelectionDisplay('leader');
@@ -29,7 +21,7 @@ function refreshSelectionDisplay(mode) {
     const $level = $chooser.querySelector('[data-ref="level"]');
     
     if (adv === 'NONE') {
-        $name.textContent = 'NONE';
+        $name.textContent = 'No Adversary';
         $level.textContent = '';
         $btn.style.removeProperty('--flag-bg');
     } else {
@@ -65,6 +57,7 @@ export function initializeChooserUi() {
     wireSwapButton();
     wireLevelSlider('leader');
     wireLevelSlider('follow');
+    wireCombineButton();
 }
 
 const divLeaderTag = `
@@ -139,5 +132,12 @@ function wireLevelSlider(mode) {
         const val = parseInt($slider.value);
         selections[mode].level = val;
         refreshSelectionDisplay(mode);
+    });
+}
+
+function wireCombineButton() {
+    const $combine = document.getElementById('combine-button');
+    $combine.addEventListener('click', e => {
+        combineAdversaries(selections);
     });
 }
