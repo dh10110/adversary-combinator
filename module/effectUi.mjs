@@ -2,7 +2,20 @@ import officialData from "../data/official.json" with { type: "json" };
 import { SelPair } from "./models.mjs";
 import { buildTimingTree } from "./timing.mjs";
 
-export function makeEffectElement(e) {
+export function makeElement(tag, htmlContent, classes) {
+    const e = document.createElement(tag);
+    e.innerHTML = htmlContent;
+    if (classes) {
+        if (Array.isArray(classes)) { 
+            e.classList.add(...classes);
+        } else {
+            e.classList.add(classes);
+        }
+    }
+    return e;
+}
+
+export function makeEffectElement(e, follow) {
     const html = `
 <article data-ref="${e.ref}" class="adversary-effect">
     <span class="altag">
@@ -12,7 +25,7 @@ export function makeEffectElement(e) {
     <div class="effect-detail">
         <div class="effect-name">
             ${e.type === 'loss' ? "Loss Condition" : ""}
-            ${e.type === 'esc' ? "Escalation" : ""}
+            ${e.type === 'esc' ? "Escalation " + (e.adv === (follow && follow.adv||'') ? "Ⅲ" : "<img class='icon' src='./img/icon/Escalation.svg'>") : ""}
         </div>
         <div>
             <output class="effect-name">${e.name}</output>
@@ -34,11 +47,11 @@ function makeFearElement(fear) {
         Fear
     </span>
     <div class="effect-detail">
-        <div>
+        <div class="fear-deck">
             ${fear[0]}
-            <img class="tl" src="./img/tl2.svg" />
+            <img class="tl" src="./img/tl2.svg" alt="Terror Level 2 Divider" title="Terror Level 2 Divider" />
             ${fear[1]}
-            <img class="tl" src="./img/tl3.svg" />
+            <img class="tl" src="./img/tl3.svg" alt="Terror Level 3 Divider" title="Terror Level 3 Divider" />
             ${fear[2]}
         </div>
     </div>
@@ -110,11 +123,18 @@ export function enhanceText(text) {
 
 
 function addFear(l, f) {
-    return [
-        3 + l[0] + f[0],
-        3 + l[1] + f[1],
-        3 + l[2] + f[2]
-    ];
+    const fear = [3, 3, 3];
+    if (l && l.length === 3) {
+        fear[0] += l[0];
+        fear[1] += l[1];
+        fear[2] += l[2];
+    }
+    if (f && f.length === 3) {
+        fear[0] += f[0];
+        fear[1] += f[1];
+        fear[2] += f[2];
+    }
+    return fear;
 }
 
 
@@ -132,14 +152,16 @@ export function combineAdversaries(selection) {
 
     const timingTree = buildTimingTree();
 
-    const groupedEffects = {};
+    //const groupedEffects = {};
     function addEffect(order, effect) {
+        /*
         const groupKey = 'k' + order;
         let group = groupedEffects[groupKey];
         if (!group) {
             groupedEffects[groupKey] = group = { order: order, effects: [] };
         }
         group.effects.push(effect);
+        */
         timingTree.addEffect(effect);
     }
 
@@ -161,8 +183,8 @@ export function combineAdversaries(selection) {
         e.order.forEach(o => addEffect(o, e));
     });
 
-    const leaderLevel = leader.levels.filter(x => x.lvl === selection.leader.level)[0] || {};
-    const followLevel = follow.levels.filter(x => x.lvl === selection.follow.level)[0] || {};
+    const leaderLevel = (leader.levels || []).filter(x => x.lvl === selection.leader.level)[0] || {};
+    const followLevel = (follow.levels || []).filter(x => x.lvl === selection.follow.level)[0] || {};
 
     const $setup = document.querySelector('#setup-effects > ul');
     const $play = document.querySelector('#play-effects > ul');
@@ -187,17 +209,25 @@ export function combineAdversaries(selection) {
     }
 */
 
-    showEffects(timingTree.children['1000'], $setup);
-    showEffects(timingTree.children['2000'], $play);
+    showEffects(timingTree.children['1000'], $setup, follow);
+    showEffects(timingTree.children['2000'], $play, follow);
 
 }
 
-function showEffects(period, $box) {
-    $box.appendChild(`<h3>${period.title}</h3>`);
-    period.effects['1'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    period.effects['2'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    period.effects['5'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    period.children.forEach(c => showEffects(c, $box));
-    period.effects['8'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    period.effects['9'].forEach(e => $box.appendChild(makeEffectElement(e)));
+function showEffects(period, $box, follow) {
+    const effects = [];
+    effects.push(...period.iterateEffects());
+    if (effects.length > 0) {
+        $box.appendChild(makeElement('h3', period.title, 'effect-header'));
+        effects.forEach(e => $box.appendChild(makeEffectElement(e, follow)));
+    }
+
+    //period.effects['1'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    //period.effects['2'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    //period.effects['5'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    for (const key in period.children) {
+        showEffects(period.children[key], $box, follow);
+    }
+    //period.effects['8'].forEach(e => $box.appendChild(makeEffectElement(e)));
+    //period.effects['9'].forEach(e => $box.appendChild(makeEffectElement(e)));
 }

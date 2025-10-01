@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
     --bg: light-dark(#ffffff, #1a1a1a);
     --fg: light-dark(#333333, #f0f0f0);
@@ -8,10 +10,16 @@
     --follower-color: oklch(from var(--theme-color) l c 120);
 }
 
+h1, h2, h3 {
+    font-family: 'Josefin Sans', sans-serif;
+    margin: 0.2em 0 0;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
     background-color: var(--bg);
     color: var(--fg);
     min-block-size: 100vb;
@@ -19,7 +27,8 @@ body {
     grid-template-rows: auto 1fr auto;
     
     > header {
-        padding: 0.5rem 1rem;
+        padding: 0.75em;
+        padding-bottom: 0.5em;
         background-color: var(--header-bg);
         color: var(--header-fg);
         background-image: linear-gradient(to right, var(--leader-color), var(--follower-color));
@@ -46,6 +55,8 @@ body {
         }
     }
 }
+
+button, input { font-family: inherit; }
 
 button { cursor: pointer; }
 [type="range"] { cursor: pointer; }
@@ -242,6 +253,10 @@ button { cursor: pointer; }
         border: 1px solid hsl(0 0 0 / 0.8);
         border-radius: 1ch;
         corner-shape: scoop;
+
+        i {
+            display: inline-block;
+        }
     }
     
 }
@@ -276,7 +291,6 @@ button { cursor: pointer; }
     font-size: small;
 }
 .effect-xtext {
-    font-weight: lighter;
     font-style: italic;
     font-size: 95%;
 }
@@ -300,4 +314,15 @@ button { cursor: pointer; }
             }
         }
     }
+    > .effect-header {
+        grid-column: 1 / -1;
+    }
+}
+.fear-deck {
+    display: flex;
+    gap: 1ch;
+    height: 1.3em;
+    align-items: center;
+
+    .tl { height: 100%; }
 }

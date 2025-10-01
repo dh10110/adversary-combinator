@@ -47,37 +47,62 @@ export class TimingPeriod {
     }
 
     addEffect(effect) {
-        const path = splitOrder(effect.order);
-        if (!/[12589]/.test(path[3])) { path[3] = '5'; }
-        return addEffectByPath(path, effect);
+        if (Array.isArray(effect.order)) {
+            const added = [];
+            effect.order.forEach(x => {
+                const path = splitOrder(x, true);
+                added.push(this.addEffectByPath(path, effect));
+            });
+            return added;
+        }
+
+        const path = splitOrder(effect.order, true);
+        return this.addEffectByPath(path, effect);
     }
 
     addEffectByPath(path, effect) {
+        const key = path[0];
         if (path.length == 1) {
-            return this.effects[path[0]].push(effect);
+            if (effect.repl) {
+                this.effects[key] = this.effects[key].filter(x => x.repl != effect.repl);
+            }
+            this.effects[key].push(effect);
+            return effect;
         }
-        const child = this.children[path[0]];
-        if (!child) throw new Error("Missing Timing Period " + path[0]);
+        const child = this.children[key];
+        if (!child) throw new Error("Missing Timing Period " + key);
         return child.addEffectByPath(path.slice(1), effect);
     }
 }
 
-function splitOrder(order) {
+/**
+ * 
+ * @param {number} order 
+ * @param {boolean} forEffect 
+ * @returns 
+ */
+function splitOrder(order, forEffect) {
     const path = [];
     const digits = order.toString().split('');
-    if (digits.length !== 4) throw new Error("Expecting 4-digit number");
-    const prefix = '';
-    for (let i = 0; i < 4; i += 1) {
+    if (digits.length !== 4)
+        throw new Error("Expecting 4-digit number");
+    //const toLast = digits.findLastIndex(x => x !== '0');
+    let prefix = '';
+    for (let i = 0; i <= 2; i += 1) {
         var d = digits[i];
-        if (d === '0') { return path; }
+        if (d === '0') { break; }
         prefix += d;
         path.push(`${prefix}${'0'.repeat(3 - i)}`);
+    }
+    if (forEffect) {
+        const modif = /^[1289]$/.test(digits[3]) ? digits[3] : '5';
+        path.push(modif);
     }
     return path;
 }
 
 export function buildTimingTree() {
     const root = new TimingPeriod(0, "Gameplay");
-    timingData.forEach(root.addPeriod);
+    timingData.forEach(x => root.addPeriod(x));
     return root;
 }

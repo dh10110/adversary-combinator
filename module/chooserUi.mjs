@@ -26,8 +26,8 @@ function refreshSelectionDisplay(mode) {
         $btn.style.removeProperty('--flag-bg');
     } else {
         const a = officialData.find(a => a.adv === adv);
-        $name.textContent = a.fullname;
-        $level.textContent = `Level ${sel.level}`;
+        $name.innerHTML = a.htmlname;
+        $level.innerHTML = `Level <b>${sel.level}</b>`;
         $btn.style.setProperty('--flag-bg', `url('./img/flag-svg/${a.adv}.svg')`);
     }
 
@@ -82,7 +82,7 @@ function fillAdversaryList($dialog) {
             <button type="submit" class="flag-button" data-adv="${a.adv}" title="${a.fullname}"
                     style="--flag-bg: url('./img/flag-svg/${a.adv}.svg')">
                 <div class="flag-text">
-                    <div>${a.fullname}</div>
+                    <div>${a.htmlname}</div>
                 </div>
                 ${divLeaderTag}
                 ${divFollowerTag}

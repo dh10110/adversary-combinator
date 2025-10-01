@@ -9,7 +9,7 @@
   { "order": 1250, "title": "Adversary Invaders" },
   { "order": 1300, "title": "Spirit Setup" },
   { "order": 1900, "title": "Initial Explore" },
-  { "order": 2000, "title": "During Play" },
+  { "order": 2000, "title": "Always" },
   { "order": 2100, "title": "Spirit Phase" },
   { "order": 2120, "title": "Growth Step" },
   { "order": 2150, "title": "Gain Energy" },
