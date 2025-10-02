@@ -296,6 +296,7 @@ button { cursor: pointer; }
 }
 
 .effect-list {
+    margin-block: 2em;
     > ul {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -314,7 +315,7 @@ button { cursor: pointer; }
             }
         }
     }
-    > .effect-header {
+    & .effect-header {
         grid-column: 1 / -1;
     }
 }

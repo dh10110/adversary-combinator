@@ -31,6 +31,14 @@ export class TimingPeriod {
         }
     }
 
+    * iterateEffectsRecursive() {
+        yield * this.iterateEffects();
+        for (const childKey in this.children) {
+            const child = this.children[childKey];
+            yield * child.iterateEffectsRecursive();
+        }
+    }
+
     addPeriod(item) {
         const path = splitOrder(item.order);
         return this.addPeriodByPath(path, item);

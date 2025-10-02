@@ -1,4 +1,5 @@
 import officialData from "../data/official.json" with { type: "json" };
+import { buildInvaderDeck, InvaderDeck } from "./invDeck.mjs";
 import { SelPair } from "./models.mjs";
 import { buildTimingTree } from "./timing.mjs";
 
@@ -43,7 +44,7 @@ export function makeEffectElement(e, follow) {
 function makeFearElement(fear) {
     const html = `
 <article data-ref="fear" class="adversary-effect">
-    <span class="altag">
+    <span class="">
         Fear
     </span>
     <div class="effect-detail">
@@ -53,6 +54,49 @@ function makeFearElement(fear) {
             ${fear[1]}
             <img class="tl" src="./img/tl3.svg" alt="Terror Level 3 Divider" title="Terror Level 3 Divider" />
             ${fear[2]}
+        </div>
+    </div>
+</article>
+    `;
+    const li = document.createElement('li');
+    li.innerHTML = html;
+    return li;
+}
+
+function makeInvaderDeckElement(invDeck) {
+    const sb = [];
+    const where = [];
+    const exclude = [...invDeck.toExclude];
+
+    let prior = null;
+
+    for (const card of invDeck.deck) {
+        if (prior && prior.s !== card.s) {
+            sb.push('·');
+        }
+        sb.push(card.n || card.s);
+        if (card.n) {
+            where.push(`${card.n} is the ${card.t} card`);
+            const i = exclude.findIndex(c => c.n === card.n);
+            if (i >= 0) { exclude.splice(i, 1); }
+        }
+        prior = card;
+    }
+    if (where.length > 0) {
+        sb.push(`; where ${where.join(', ')}`);
+    }
+    if (exclude.length > 0) {
+        sb.push(`; exclude ${exclude.map(c => c.t).join(', ')}`)
+    }
+
+    const html = `
+<article data-ref="invader" class="adversary-effect">
+    <span class="">
+        Inv
+    </span>
+    <div class="effect-detail">
+        <div class="invader-deck">
+            ${sb.join('')}
         </div>
     </div>
 </article>
@@ -192,7 +236,8 @@ export function combineAdversaries(selection) {
     $play.innerHTML = '';
 
     //Invader Deck
-
+    var invDeck = makeInvaderDeck(timingTree);
+    $setup.appendChild(makeInvaderDeckElement(invDeck));
 
     //Fear Deck
     const fear = addFear(leaderLevel.fear, followLevel.fear);
@@ -230,4 +275,15 @@ function showEffects(period, $box, follow) {
     }
     //period.effects['8'].forEach(e => $box.appendChild(makeEffectElement(e)));
     //period.effects['9'].forEach(e => $box.appendChild(makeEffectElement(e)));
+}
+
+function makeInvaderDeck(timingTree) {
+    const invCmds = [];
+    for (const effect of timingTree.iterateEffectsRecursive()) {
+        if (effect.inv) { invCmds.push(...effect.inv); }
+    }
+
+    //const deck = new InvaderDeck();
+    //deck.doCommand(...invCmds);
+    return buildInvaderDeck(invCmds);
 }

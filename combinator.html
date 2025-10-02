@@ -23,48 +23,50 @@
             <option>6</option>
         </datalist>
 
-        <section class="adversary-selection" data-mode="tbd">
+        <section class="page">
+            <section class="adversary-selection" data-mode="tbd">
 
-            <article id="leader-selection" data-mode="leader" data-adv="NONE">
-                <h2>Leader</h2>
-                <button class="flag-button" title="Select Leader Adversary">
-                    <div class="flag-text">
-                        <div data-ref="name">No Adversary</div>
-                        <div data-ref="level"></div>
-                    </div>
+                <article id="leader-selection" data-mode="leader" data-adv="NONE">
+                    <h2>Leader</h2>
+                    <button class="flag-button" title="Select Leader Adversary">
+                        <div class="flag-text">
+                            <div data-ref="name">No Adversary</div>
+                            <div data-ref="level"></div>
+                        </div>
+                    </button>
+                    <label>
+                        <span>Level</span>
+                        <input type="range" min="0" max="6" value="1" list="level-list" />
+                    </label>
+                </article>
+
+                <button id="swap-adversaries" title="Swap Leader and Follower">
+                    ↔
                 </button>
-                <label>
-                    <span>Level</span>
-                    <input type="range" min="0" max="6" value="1" list="level-list" />
-                </label>
-            </article>
 
-            <button id="swap-adversaries" title="Swap Leader and Follower">
-                ↔
-            </button>
+                <article id="follower-selection" data-mode="follow" data-adv="NONE">
+                    <h2>Follower</h2>
+                    <button class="flag-button" title="Select Follower Adversary">
+                        <div class="flag-text">
+                            <div data-ref="name">No Adversary</div>
+                            <div data-ref="level"></div>
+                        </div>
+                    </button>
+                    <label>
+                        <span>Level</span>
+                        <input type="range" min="0" max="6" value="1" list="level-list" />
+                    </label>
+                </article>
 
-            <article id="follower-selection" data-mode="follow" data-adv="NONE">
-                <h2>Follower</h2>
-                <button class="flag-button" title="Select Follower Adversary">
-                    <div class="flag-text">
-                        <div data-ref="name">No Adversary</div>
-                        <div data-ref="level"></div>
-                    </div>
-                </button>
-                <label>
-                    <span>Level</span>
-                    <input type="range" min="0" max="6" value="1" list="level-list" />
-                </label>
-            </article>
-
-            <dialog>
-                <header>
-                    <h2>Select <output/> Adversary</h2>
-                </header>
-                <form>
-                    <ul><!--Filled Dynamically--></ul>
-                </form>
-            </dialog>
+                <dialog>
+                    <header>
+                        <h2>Select <output/> Adversary</h2>
+                    </header>
+                    <form>
+                        <ul><!--Filled Dynamically--></ul>
+                    </form>
+                </dialog>
+            </section>
 
             <section>
                 <button id="combine-button">Combine</button>
@@ -73,21 +75,21 @@
         </section>
 
 
-        <section id="setup-effects" class="effect-list">
+        <section id="setup-effects" class="page effect-list">
             <h2>At Setup</h2>
 
             <ul><!--Filled Dynamically--></ul>
 
         </section>
 
-        <section id="play-effects" class="effect-list">
+        <section id="play-effects" class="page effect-list">
             <h2>During Play</h2>
 
             <ul><!--Filled Dynamically--></ul>
 
         </section>
 
-        <section  class="effect-list">
+        <section  class="page effect-list">
             <h2>Debug Effects</h2>
             <ul id="debug"></ul>
         </section>
