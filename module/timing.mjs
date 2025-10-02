@@ -34,26 +34,33 @@ export class TimingPeriod {
         this.order = order;
         /** Title of this timing period */
         this.title = title;
-        /** Child timing periods of this timing period. Keys here should match the start of the order number */
+        /** Child timing periods of this timing period. Keys here should match the start of the order number
+         * @type {Object.<string, TimingPeriod>} */
         this.children = {};
-        /** Effects orccuring sometime during this timing period; different lists for each value in {@link TimingModifiers}. */
+        /** Effects orccuring sometime during this timing period; different lists for each value in {@link TimingModifiers}.
+         * @type {Object.<string, AdversaryEffectDataModel[]>} */
         this.effects = {
-            /** @type {Array} Effects occuring before the this period starts */
+            /** Effects occuring before the this period starts
+             * @type {AdversaryEffectDataModel[]} */
             "1": [],
-            /** @type {Array} Effects occuring at the start of this period */
+            /** Effects occuring at the start of this period
+             * @type {AdversaryEffectDataModel[]} */
             "2": [],
-            /** @type {Array} Effects occuring during this period */
+            /** Effects occuring during this period
+             * @type {AdversaryEffectDataModel[]} */
             "5": [],
-            /** @type {Array} Effects occuring at the end of this period */
+            /** Effects occuring at the end of this period
+             * @type {AdversaryEffectDataModel[]} */
             "8": [],
-            /** @type {Array} Effects occuring after the this period ends */
+            /** Effects occuring after the this period ends
+             * @type {AdversaryEffectDataModel[]} */
             "9": []
         }
     }
 
     /**
      * Iterate the effects contained directly in this timing period.
-     * @returns Iterator of effect data objects
+     * @yields {AdversaryEffectDataModel} - Next effect
      */
     * iterateEffects() {
         for (const key in this.effects) {
@@ -67,7 +74,7 @@ export class TimingPeriod {
     /**
      * Iterate the effects contained directly in this timing period,
      *    and all descendent timing periods.
-     * @returns Iterator of effect data objects
+     * @yields {AdversaryEffectDataModel} - Next effect
      */
     * iterateEffectsRecursive() {
         yield * this.iterateEffects();
@@ -79,7 +86,7 @@ export class TimingPeriod {
 
     /**
      * Adds a period as a descendent to this timing period, based on its .order property.
-     * @param {TimingPeriodData} item Period data item to add.
+     * @param {TimingPeriodDataModel} item Period data item to add.
      * @returns The added {@link TimingPeriod}.
      */
     addPeriod(item) {
@@ -90,7 +97,7 @@ export class TimingPeriod {
     /**
      * Adds a period as a descendent to this timing period.
      * @param {string[]} path Array of keys to follow to add this period.
-     * @param {TimingPeriodData} item Period data item to add.
+     * @param {TimingPeriodDataModel} item Period data item to add.
      * @returns The added {@link TimingPeriod}.
      */
     addPeriodByPath(path, item) {
@@ -128,7 +135,7 @@ export class TimingPeriod {
      * Adds an effect as a descendent to this timing period.
      * Existing effects with the same .order and .repl (if any) will be replaced.
      * @param {string[]} path Array of keys to follow to add this effect.
-     * @param {*} effect Effect data item to add.
+     * @param {AdversaryEffectDataModel} effect Effect data item to add.
      * @returns The added effect(s).
      */
     addEffectByPath(path, effect) {
@@ -177,7 +184,7 @@ function splitOrder(order, forEffect) {
 
 /**
  * Build a tree of all gameplay timing periods.
- * @returns Empty TimingPeriod which is the root of the tree.
+ * @returns Empty {@link TimingPeriod} which is the root of the tree.
  */
 export function buildTimingTree() {
     const root = new TimingPeriod(0, "Gameplay");
@@ -187,8 +194,8 @@ export function buildTimingTree() {
 
 
 /**
- * Data item from timing.json
- * @typedef {Object} TimingPeriodData
- * @property {int} order - timing order id
- * @property {string} title - title of timing period
+ * @typedef {import("../data/typedef.mjs").TimingPeriodDataModel} TimingPeriodDataModel
+ */
+/**
+ * @typedef {import("../data/typedef.mjs").AdversaryEffectDataModel} AdversaryEffectDataModel
  */

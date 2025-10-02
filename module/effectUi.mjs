@@ -1,8 +1,16 @@
 import officialData from "../data/official.json" with { type: "json" };
-import { buildInvaderDeck } from "./invDeck.mjs";
-import { SelPair } from "./models.mjs";
-import { buildTimingTree } from "./timing.mjs";
+import { enhanceGameText } from "./gameText.mjs";
+import { buildInvaderDeck, InvaderDeck } from "./invDeck.mjs";
+import { SelAdv, SelPair } from "./models.mjs";
+import { buildTimingTree, TimingPeriod } from "./timing.mjs";
 
+/**
+ * Simplified Helper to create an HTML Element
+ * @param {string} tag - Tag of element to create
+ * @param {string} htmlContent - HTML to put in created element
+ * @param {string | string[]} classes - Class name(s) to apply to created element
+ * @returns {HTMLElement} Created HTML Element
+ */
 export function makeElement(tag, htmlContent, classes) {
     const e = document.createElement(tag);
     e.innerHTML = htmlContent;
@@ -16,6 +24,12 @@ export function makeElement(tag, htmlContent, classes) {
     return e;
 }
 
+/**
+ * Make an HTML Element for an Adversary Effect
+ * @param {import('../data/typedef.mjs').AdversaryEffectDataModel} e 
+ * @param {SelAdv} follow 
+ * @returns {HTMLElement} Created HTML Element
+ */
 export function makeEffectElement(e, follow) {
     const html = `
 <article data-ref="${e.ref}" class="adversary-effect">
@@ -36,11 +50,14 @@ export function makeEffectElement(e, follow) {
     </div>
 </article>
     `;
-    const li = document.createElement('li');
-    li.innerHTML = html;
-    return li;
+    return makeElement('li', html);
 }
 
+/**
+ * Make an HTML Element to output the Fear Deck
+ * @param {FearArray} fear 
+ * @returns {HTMLElement} Created HTML Element
+ */
 function makeFearElement(fear) {
     const html = `
 <article data-ref="fear" class="adversary-effect">
@@ -58,11 +75,14 @@ function makeFearElement(fear) {
     </div>
 </article>
     `;
-    const li = document.createElement('li');
-    li.innerHTML = html;
-    return li;
+    return makeElement('li', html);
 }
 
+/**
+ * Make an HTML Element to output the Invader Deck
+ * @param {InvaderDeck} invDeck 
+ * @returns {HTMLElement} Created HTML Element
+ */
 function makeInvaderDeckElement(invDeck) {
     const sb = [];
     const where = [];
@@ -101,12 +121,10 @@ function makeInvaderDeckElement(invDeck) {
     </div>
 </article>
     `;
-    const li = document.createElement('li');
-    li.innerHTML = html;
-    return li;
+    return makeElement('li', html);
 }
 
-
+/*
 const iconReplacements = {
     city: '<img src="./img/icon/City.svg" class="icon" alt="City" />',
     town: '<img src="./img/icon/Town.svg" class="icon" alt="Town" />',
@@ -161,12 +179,19 @@ function prettyHtml(text) {
         .replace(rxIcon, iconMatch);
         
 }
+*/
 
-export function enhanceText(text) {
-    return prettyHtml(text);
+function enhanceText(text) {
+    //return prettyHtml(text);
+    return enhanceGameText(text);
 }
 
-
+/**
+ * Add 2 fear arrays to the default
+ * @param {FearArray} l - leader's fear array
+ * @param {FearArray} f - follower's fear array
+ * @returns {FearArray}
+ */
 function addFear(l, f) {
     const fear = [3, 3, 3];
     if (l && l.length === 3) {
@@ -184,7 +209,7 @@ function addFear(l, f) {
 
 
 /**
- * 
+ * Combine the selected adversaries
  * @param {SelPair} selection 
  */
 export function combineAdversaries(selection) {
@@ -235,6 +260,12 @@ export function combineAdversaries(selection) {
     showEffects(timingTree.children['2000'], $play, follow);
 }
 
+/**
+ * Show all the effects in a Timing Period
+ * @param {TimingPeriod} period - Timing Period to show
+ * @param {Element} $box - Element to fill
+ * @param {SelAdv} follow - The follow Adversary (to handle Escalation properly)
+ */
 function showEffects(period, $box, follow) {
     const effects = Array.from(period.iterateEffects());
     if (effects.length > 0) {
@@ -247,6 +278,11 @@ function showEffects(period, $box, follow) {
     }
 }
 
+/**
+ * Make the invader deck from the effects in the timing tree
+ * @param {TimingPeriod} timingTree - Root of the gameplay timing tree
+ * @returns {InvaderDeck}
+ */
 function makeInvaderDeck(timingTree) {
     const invCmds = [];
     for (const effect of timingTree.iterateEffectsRecursive()) {
@@ -254,3 +290,9 @@ function makeInvaderDeck(timingTree) {
     }
     return buildInvaderDeck(invCmds);
 }
+
+
+
+/**
+ * @typedef {import("../data/typedef.mjs").FearArray} FearArray
+ */

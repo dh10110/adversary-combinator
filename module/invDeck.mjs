@@ -5,7 +5,7 @@
 class DeckArray extends Array {
     /**
      * Create a {@link DeckArray}.
-     * @param  {...any} items Initial items for the array.
+     * @param  {...CardRef} items Initial items for the array.
      */
     constructor(...items) { super(...items); }
 
