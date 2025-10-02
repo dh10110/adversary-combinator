@@ -3,16 +3,6 @@ import { makeEffectElement } from "./effectUi.mjs";
 import { initializeChooserUi } from "./chooserUi.mjs";
 
 document.addEventListener('DOMContentLoaded', function () {
-    //console.log('DOM fully loaded and parsed');
-
-    
-    officialData.forEach(a => {
-        console.log(a.adv,
-            "Levels:", a.levels.length,
-            "Effects:", a.effects.length);
-    
-    });
-
 
     const $out = document.getElementById('debug');
     officialData.forEach(a => {
@@ -24,5 +14,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initializeChooserUi();
 });
-
-//console.log('Module combinator end');

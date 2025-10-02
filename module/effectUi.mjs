@@ -1,5 +1,5 @@
 import officialData from "../data/official.json" with { type: "json" };
-import { buildInvaderDeck, InvaderDeck } from "./invDeck.mjs";
+import { buildInvaderDeck } from "./invDeck.mjs";
 import { SelPair } from "./models.mjs";
 import { buildTimingTree } from "./timing.mjs";
 
@@ -120,8 +120,10 @@ const iconReplacements = {
     fast: '<img src="./img/icon/Fast.svg" class="icon clr-fast" alt="Fast" />',
 };
 
+const rxfIcon = String.raw`\[([A-Za-z]+)\]`;
 
-const rxIcon = /\[([A-Za-z]+)\]/g;
+//const rxIcon = /\[([A-Za-z]+)\]/g;
+const rxIcon = new RegExp(rxfIcon, 'g');
 function iconMatch(match, g1) {
     const key = g1.toLowerCase();
     const repl = iconReplacements[key];
@@ -140,7 +142,6 @@ function stageMatch(match, g1) {
     return `<span class="keep-together">Stage ${romanChars[g1.length]}</span>`;
 }
 
-const rxfIcon = String.raw`\[([A-Za-z]+)\]`;
 
 const rxLandNum = /land #[1-8]/g;
 const rxIconTogether = new RegExp(`((?:[0-9]+|a|no) )?${rxfIcon}(/${rxfIcon})?[.,]?`, 'ig');
@@ -190,46 +191,29 @@ export function combineAdversaries(selection) {
     
     //TODO: Handle weird input
 
-    //Invader Deck Effects: follower, then leader
-
-    //All Other Effects: Setup/Play Leader/Follower
+    //Put all the effects in Gameplay Timing Order
 
     const timingTree = buildTimingTree();
-
-    //const groupedEffects = {};
-    function addEffect(order, effect) {
-        /*
-        const groupKey = 'k' + order;
-        let group = groupedEffects[groupKey];
-        if (!group) {
-            groupedEffects[groupKey] = group = { order: order, effects: [] };
-        }
-        group.effects.push(effect);
-        */
-        timingTree.addEffect(effect);
-    }
-
-    
-
     const leader = officialData.filter(x => x.adv === selection.leader.adversary)[0] || { effects: [] };
     const follow = officialData.filter(x => x.adv === selection.follow.adversary)[0] || { effects: [] };
+
+    //Add all the effects in the order of leader, then follower,
+    //   except for invader deck changes where the leader changes are done last
     const leaderInv = [];
     leader.effects.forEach(e => {
         if (e.lvl > selection.leader.level) { return; }
         if (e.inv) { leaderInv.push(e); return; }
-        e.order.forEach(o => addEffect(o, e));
+        timingTree.addEffect(e);
     });
     follow.effects.forEach(e => {
         if (e.lvl > selection.follow.level) { return; }
-        e.order.forEach(o => addEffect(o, e));
+        timingTree.addEffect(e);
     })
     leaderInv.forEach(e => {
-        e.order.forEach(o => addEffect(o, e));
+        timingTree.addEffect(e);
     });
 
-    const leaderLevel = (leader.levels || []).filter(x => x.lvl === selection.leader.level)[0] || {};
-    const followLevel = (follow.levels || []).filter(x => x.lvl === selection.follow.level)[0] || {};
-
+    //Clear the holders
     const $setup = document.querySelector('#setup-effects > ul');
     const $play = document.querySelector('#play-effects > ul');
     $setup.innerHTML = '';
@@ -239,42 +223,28 @@ export function combineAdversaries(selection) {
     var invDeck = makeInvaderDeck(timingTree);
     $setup.appendChild(makeInvaderDeckElement(invDeck));
 
+    //Level for Fear
+    const leaderLevel = (leader.levels || []).filter(x => x.lvl === selection.leader.level)[0] || {};
+    const followLevel = (follow.levels || []).filter(x => x.lvl === selection.follow.level)[0] || {};
     //Fear Deck
     const fear = addFear(leaderLevel.fear, followLevel.fear);
     $setup.appendChild(makeFearElement(fear));
 
-/*
     //Other Effects
-    for (const groupKey in groupedEffects) {
-        const group = groupedEffects[groupKey];
-        const $box = group.order < 2000 ? $setup : $play;
-
-        group.effects.forEach(e => $box.appendChild(makeEffectElement(e)));
-        
-    }
-*/
-
     showEffects(timingTree.children['1000'], $setup, follow);
     showEffects(timingTree.children['2000'], $play, follow);
-
 }
 
 function showEffects(period, $box, follow) {
-    const effects = [];
-    effects.push(...period.iterateEffects());
+    const effects = Array.from(period.iterateEffects());
     if (effects.length > 0) {
         $box.appendChild(makeElement('h3', period.title, 'effect-header'));
         effects.forEach(e => $box.appendChild(makeEffectElement(e, follow)));
     }
 
-    //period.effects['1'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    //period.effects['2'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    //period.effects['5'].forEach(e => $box.appendChild(makeEffectElement(e)));
     for (const key in period.children) {
         showEffects(period.children[key], $box, follow);
     }
-    //period.effects['8'].forEach(e => $box.appendChild(makeEffectElement(e)));
-    //period.effects['9'].forEach(e => $box.appendChild(makeEffectElement(e)));
 }
 
 function makeInvaderDeck(timingTree) {
@@ -282,8 +252,5 @@ function makeInvaderDeck(timingTree) {
     for (const effect of timingTree.iterateEffectsRecursive()) {
         if (effect.inv) { invCmds.push(...effect.inv); }
     }
-
-    //const deck = new InvaderDeck();
-    //deck.doCommand(...invCmds);
     return buildInvaderDeck(invCmds);
 }

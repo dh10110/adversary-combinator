@@ -1,27 +1,60 @@
 import timingData from "../data/timing.json" with { type: "json" };
 
+/**
+ * Timing modifiers used as keys for {@link TimingPeriod.effects}.
+ * @readonly
+ * @enum {string}
+ */
 export const TimingModifiers = {
+    /** Modifier: Before the period starts */
     BEFORE: "1",
+    /** Modifier: At the start of the period */
     ATSTART: "2",
+    /** Modifier: Sometime during the period (default) */
     DURING: "5",
+    /** Modifier: At the end of the period */
     ATEND: "8",
+    /** Modifier: After the period ends */
     AFTER: "9"
 }
 
+/**
+ * Class that represents a discrete timing period with the gameplay.
+ * Can contain child timing periods, and a list of effects that occur in various parts of the period.
+ * Keys for effects arrays are from {@link TimingModifiers}.
+ */
 export class TimingPeriod {
+    /**
+     * Create a timing period.
+     * @param {number} order 4-digit timing period order number (ends in 0).
+     * @param {string} title Title of the timing period.
+     */
     constructor(order, title) {
+        /** 4-digit order number for this timing period */
         this.order = order;
+        /** Title of this timing period */
         this.title = title;
+        /** Child timing periods of this timing period. Keys here should match the start of the order number */
         this.children = {};
+        /** Effects orccuring sometime during this timing period; different lists for each value in {@link TimingModifiers}. */
         this.effects = {
+            /** @type {Array} Effects occuring before the this period starts */
             "1": [],
+            /** @type {Array} Effects occuring at the start of this period */
             "2": [],
+            /** @type {Array} Effects occuring during this period */
             "5": [],
+            /** @type {Array} Effects occuring at the end of this period */
             "8": [],
+            /** @type {Array} Effects occuring after the this period ends */
             "9": []
         }
     }
 
+    /**
+     * Iterate the effects contained directly in this timing period.
+     * @returns Iterator of effect data objects
+     */
     * iterateEffects() {
         for (const key in this.effects) {
             const arr = this.effects[key];
@@ -31,6 +64,11 @@ export class TimingPeriod {
         }
     }
 
+    /**
+     * Iterate the effects contained directly in this timing period,
+     *    and all descendent timing periods.
+     * @returns Iterator of effect data objects
+     */
     * iterateEffectsRecursive() {
         yield * this.iterateEffects();
         for (const childKey in this.children) {
@@ -39,11 +77,22 @@ export class TimingPeriod {
         }
     }
 
+    /**
+     * Adds a period as a descendent to this timing period, based on its .order property.
+     * @param {TimingPeriodData} item Period data item to add.
+     * @returns The added {@link TimingPeriod}.
+     */
     addPeriod(item) {
         const path = splitOrder(item.order);
         return this.addPeriodByPath(path, item);
     }
 
+    /**
+     * Adds a period as a descendent to this timing period.
+     * @param {string[]} path Array of keys to follow to add this period.
+     * @param {TimingPeriodData} item Period data item to add.
+     * @returns The added {@link TimingPeriod}.
+     */
     addPeriodByPath(path, item) {
         const child = this.children[path[0]];
         if (child) {
@@ -54,6 +103,13 @@ export class TimingPeriod {
         return added;
     }
 
+    /**
+     * Adds an effect as a descendent to this timing period, based on its .order property.
+     * If effect has an array for the .order, effect will be added on each path.
+     * Existing effects with the matching .order and .repl (if any) will be replaced.
+     * @param {*} effect Effect data item to add.
+     * @returns The added effect(s).
+     */
     addEffect(effect) {
         if (Array.isArray(effect.order)) {
             const added = [];
@@ -68,6 +124,13 @@ export class TimingPeriod {
         return this.addEffectByPath(path, effect);
     }
 
+    /**
+     * Adds an effect as a descendent to this timing period.
+     * Existing effects with the same .order and .repl (if any) will be replaced.
+     * @param {string[]} path Array of keys to follow to add this effect.
+     * @param {*} effect Effect data item to add.
+     * @returns The added effect(s).
+     */
     addEffectByPath(path, effect) {
         const key = path[0];
         if (path.length == 1) {
@@ -84,17 +147,19 @@ export class TimingPeriod {
 }
 
 /**
- * 
- * @param {number} order 
- * @param {boolean} forEffect 
- * @returns 
+ * Splits a 4 digit order into a path of keys for the timing tree
+ * @example splitOrder(1100) => ['1000', '1100'] 
+ * @example splitOrder(2581, true) => ['2000', '2500', '2580', '1']
+ * @param {number} order The 4-digit order number
+ * @param {boolean} forEffect This is being done for an effect's order number
+ * @returns Array of order keys for the path in the timing tree
  */
 function splitOrder(order, forEffect) {
     const path = [];
     const digits = order.toString().split('');
     if (digits.length !== 4)
         throw new Error("Expecting 4-digit number");
-    //const toLast = digits.findLastIndex(x => x !== '0');
+
     let prefix = '';
     for (let i = 0; i <= 2; i += 1) {
         var d = digits[i];
@@ -103,14 +168,27 @@ function splitOrder(order, forEffect) {
         path.push(`${prefix}${'0'.repeat(3 - i)}`);
     }
     if (forEffect) {
+        //Effects have a final single digit key that defaults to 5
         const modif = /^[1289]$/.test(digits[3]) ? digits[3] : '5';
         path.push(modif);
     }
     return path;
 }
 
+/**
+ * Build a tree of all gameplay timing periods.
+ * @returns Empty TimingPeriod which is the root of the tree.
+ */
 export function buildTimingTree() {
     const root = new TimingPeriod(0, "Gameplay");
     timingData.forEach(x => root.addPeriod(x));
     return root;
 }
+
+
+/**
+ * Data item from timing.json
+ * @typedef {Object} TimingPeriodData
+ * @property {int} order - timing order id
+ * @property {string} title - title of timing period
+ */

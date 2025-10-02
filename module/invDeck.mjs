@@ -1,9 +1,32 @@
-
+/**
+ * Extension of Array to simplify some Invader Deck steps.
+ * @extends {Array}
+ */
 class DeckArray extends Array {
+    /**
+     * Create a {@link DeckArray}.
+     * @param  {...any} items Initial items for the array.
+     */
     constructor(...items) { super(...items); }
 
+    /** Shallow copy of this {@link DeckArray} */
     clone() { return new DeckArray(...this); }
 
+    /**
+     * Search from the top to find the nth occurence of a card of a particular stage.
+     * @param {number} stage Stage of the card to find (1,2,3) or 0 for any stage.
+     * @param {number} ordinal Ordinal index of the card of that stage to find. Negative to search from the bottom using {@link lastIndexOf}.
+     * @returns {number?} Index of the found card, or null if not found.
+     * @example
+     * //3nd Stage II
+     * indexOf(2, 3)
+     * @example
+     * //last Stage I
+     * indexOf(1, -1)
+     * @example
+     * //5th card of any stage
+     * indexOf(0, 5)
+     */
     indexOf(stage, ordinal) {
         if (ordinal < 0) return this.lastIndexOf(stage, -ordinal);
 
@@ -18,6 +41,19 @@ class DeckArray extends Array {
         return null;
     }
     
+    /**
+     * Search from the bottom to find the nth occurence of a card of a particular stage.
+     * It is generally expected to call {@link indexOf} with a negative ordinal instead of calling this method directly.
+     * @param {number} stage Stage of the card to find (1,2,3) or 0 for any stage.
+     * @param {number} ordinal Ordinal index of the card of that stage to find. Negative to search from the top using {@link indexOf}.
+     * @returns {number?} Index of the found card, or null if not found.
+     * @example
+     * //last Stage I
+     * lastIndexOf(1, 1)
+     * @example
+     * //3nd Stage II
+     * lastIndexOf(2, -3)
+     */
     lastIndexOf(stage, ordinal) {
         if (ordinal < 0) return this.indexOf(stage, -ordinal);
 
@@ -32,6 +68,12 @@ class DeckArray extends Array {
         return null;
     }
 
+    /**
+     * Uses a provided query object to try to locate a particular card.
+     * @param {InvCmdQuery} query - card to find in deck or specials
+     * @param {number} refIndex - index reference passed by containing forEach
+     * @returns {LocateResult}
+     */
     locate(query, refIndex) {
         if (!query) {
             return {spec:false};
@@ -49,26 +91,57 @@ class DeckArray extends Array {
         }
     }
 
+    /**
+     * Delete a card from the array, at provided index.
+     * @param {number} index Index to delete card from
+     */
     deleteAt(index) {
         index = clamp(0, index, this.length - 1);
         this.splice(index, 1);
     }
 
+    /**
+     * Insert a card to the array, at provided index.
+     * @param {number} index Index to insert at
+     * @param {CardRef} card Card to insert
+     */
     insertAt(index, card) {
         index = clamp(0, index, this.length);
         this.splice(index, 0, card);
     }
 }
 
-
+/**
+ * Class to encapsulate modifications to the Invader Deck
+ */
 export class InvaderDeck {
+    /**
+     * Create a new {@link InvaderDeck} with the default deck order.
+     */
     constructor() {
-        //this.deck = Array.from(defaultDeck);
-        //this.deck = Array.from(deckBuilder());
+        /**
+         * The deck of invader cards 
+         * @type {DeckArray}
+         */
         this.deck = new DeckArray(...deckBuilder());
+        /**
+         * list of special cards to exclude
+         * @type {CardRef[]}
+         */
         this.toExclude = [];
+        /**
+         * flag to indicate if the deck is in the default order
+         * @type {boolean} 
+         */
+        this.isDefault = true;
     }
 
+    /**
+     * Execute an invader deck modificaton command on this deck.
+     * @param {InvCmd} cmd - Invader Deck modification command
+     * @param {number | undefined} refIndex - Reference index from forEach
+     * @returns {number | boolean} - true/false for single command success; or count of successes of forEach
+     */
     doCommand(cmd, refIndex) {
         //exclude
         if (cmd.x) {
@@ -86,6 +159,7 @@ export class InvaderDeck {
             return nOk;
         }
 
+        //Make changes on a temp copy; only finalize if whole command worked
         const newDeck = this.deck.clone();
 
         //m = move from: letter=special, array=[stage, index], index=-1 => bottom
@@ -100,6 +174,7 @@ export class InvaderDeck {
             newDeck.deleteAt(r.i);
             if (m.spec && m.c) { newDeck.insertAt(r.i, m.c); }
             this.deck = newDeck;
+            this.isDefault = false;
             return true;
         }
 
@@ -111,6 +186,7 @@ export class InvaderDeck {
         if (b.spec && b.i !== null) {
             newDeck.insertAt(b.i + 1, m.c);
             this.deck = newDeck;
+            this.isDefault = false;
             return true;
         }
 
@@ -118,42 +194,119 @@ export class InvaderDeck {
         if (cmd.d) {
             newDeck.insertAt(m.i + cmd.d, m.c);
             this.deck = newDeck;
+            this.isDefault = false;
             return true;
         }
     }
-
-
 }
 
-
-
+/**
+ * Sets an upper and lower bound to a value.
+ * @param {*} min Minimum value
+ * @param {*} value Preferred calue
+ * @param {*} max Maximum value
+ * @returns
+ */
 function clamp(min, value, max) {
     return value < min ? min
         : value > max ? max
         : value;
 }
 
+/**
+ * Builder function to make default invader deck with indexes for debugging
+ */
 function * deckBuilder() {
-    let j = 0;
-    for (const s of [1, 2, 3]) {
-        let n = 2 + s;
+    let j = 0; //whole deck index
+    for (const s of [1, 2, 3]) { //stages 1,2,3
+        let n = 2 + s; //does 3×1, 4×2, 5×3
         for (let i = 0; i < n; ++i) {
             yield {s: s, i: ++j};
         }
     }
 }
 
+/**
+ * Default deck order
+ * @type {CardRef[]}
+ */
 const defaultDeck = [{s:1},{s:1},{s:1}, {s:2},{s:2},{s:2},{s:2}, {s:3},{s:3},{s:3},{s:3},{s:3}];
+
+/**
+ * Special Cards
+ */
 const specials = {
+    /**
+     * Coastal Lands Invader Card
+     * @type {CardRef}
+     */
     C: {n: 'C', s: 2, t:'Coastal Lands'},
+    /**
+     * Salt Deposits Card - Habsburg Mining Expedition
+     * @type {CardRef}
+     */
     S: {n: 'S', s: 2, t:'Salt Deposits'},
+    /**
+     * Habsburg Reminder Card - Habsburg Livestock Colony
+     * @type {CardRef}
+     */
     H: {n: 'H', t:'Habsburg Reminder Card'}
 };
 
+/**
+ * Build the Invader Deck with the provided modification commands.
+ * @param {InvCmd[]} invCmds 
+ * @returns {InvaderDeck}
+ */
 export function buildInvaderDeck(invCmds) {
     const invDeck = new InvaderDeck();
+    const changes = 0;
     for (const cmd of invCmds) {
-        invDeck.doCommand(cmd);
+        changes += invDeck.doCommand(cmd);
     }
     return invDeck;
 }
+
+
+/**
+ * Result from the {@link InvaderDeck}.locate function.
+ * @typedef {Object} LocateResult
+ * @property {boolean} spec - true if caller specified a query; other properties omitted if spec = false.
+ * @property {boolean} nf - true if no matching card found
+ * @property {number?} i - Index of card in deck (if found in deck)
+ * @property {CardRef?} c - A card, either found in deck, or a special.
+ */
+
+
+/** 
+ * Card Reference in the invader deck.
+ * @typedef {Object} CardRef
+ * @property {number | undefined} s - stage of the invader card; omitted if card doesn't have a stage.
+ * @property {number | undefined} i - original index of the card in the deck
+ * @property {number | undefined} n - single character name of special card
+ * @property {number | undefined} t - title of special card
+ */
+
+/** 
+ * Invader Command from json
+ * @typedef {Object} InvCmd
+ * @property {InvaderStage} e - invader stage to iterate
+ * @property {InvCmd} $ - command to run for each iterated card; this command can use '?' to refer to the index of the current card.
+ * @property {InvCmdQuery | undefined} m - card to move
+ * @property {InvCmdQuery | undefined} r - card to remove / replace with m
+ * @property {InvCmdQuery | undefined} b - card to place m below
+ * @property {number} d - delta: number of cards to move m; negative is up, positive is down
+ * @property {string} x - special card to exclude when making the deck
+ */
+
+/**
+ * Invader Card Stage
+ * @typedef {1|2|3|0} InvaderStage - Stage 1, 2, or 3; or 0 for any stage.
+ */
+
+/**
+ * Invader Command Query to find card(s) in deck.
+ * 
+ * Expected String values: '?' for the index passed from forEach; or a member of {@link specials}.
+ * @typedef {[InvaderStage, number] | string} InvCmdQuery
+ */
