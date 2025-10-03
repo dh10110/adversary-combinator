@@ -8,6 +8,7 @@
     --header-fg: light-dark(#fafafa, #333333);
     --leader-color: var(--theme-color);
     --follower-color: oklch(from var(--theme-color) l c 120);
+    --loss-color: oklch(from var(--theme-color) l c 30);
 }
 
 h1, h2, h3 {
@@ -296,6 +297,21 @@ button { cursor: pointer; }
     .altag_level {
         font-size: 90%;
         align-self: center;
+    }
+}
+
+.effect-detail {
+    &.effect-type-loss {
+        border-left: 5px solid var(--loss-color);
+        padding-left: 3px;
+    }
+    &.effect-type-esc {
+        border-left: 5px solid var(--leader-color);
+        padding-left: 3px;
+    }
+    &.effect-type-mult {
+        border-left: 5px solid oklch(from var(--theme-color) l 0 0);
+        padding-left: 3px;
     }
 }
 .effect-name {

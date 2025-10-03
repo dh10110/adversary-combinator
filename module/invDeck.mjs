@@ -14,7 +14,7 @@ class DeckArray extends Array {
 
     /**
      * Search from the top to find the nth occurence of a card of a particular stage.
-     * @param {number} stage Stage of the card to find (1,2,3) or 0 for any stage.
+     * @param {import("../data/typedef.mjs").InvaderStage} stage Stage of the card to find (1,2,3) or 0 for any stage.
      * @param {number} ordinal Ordinal index of the card of that stage to find. Negative to search from the bottom using {@link lastIndexOf}.
      * @returns {number?} Index of the found card, or null if not found.
      * @example
@@ -44,7 +44,7 @@ class DeckArray extends Array {
     /**
      * Search from the bottom to find the nth occurence of a card of a particular stage.
      * It is generally expected to call {@link indexOf} with a negative ordinal instead of calling this method directly.
-     * @param {number} stage Stage of the card to find (1,2,3) or 0 for any stage.
+     * @param {import("../data/typedef.mjs").InvaderStage} stage Stage of the card to find (1,2,3) or 0 for any stage.
      * @param {number} ordinal Ordinal index of the card of that stage to find. Negative to search from the top using {@link indexOf}.
      * @returns {number?} Index of the found card, or null if not found.
      * @example
@@ -70,7 +70,7 @@ class DeckArray extends Array {
 
     /**
      * Uses a provided query object to try to locate a particular card.
-     * @param {InvCmdQuery} query - card to find in deck or specials
+     * @param {import("../data/typedef.mjs").InvCmdQuery} query - card to find in deck or specials
      * @param {number} refIndex - index reference passed by containing forEach
      * @returns {LocateResult}
      */
@@ -138,7 +138,7 @@ export class InvaderDeck {
 
     /**
      * Execute an invader deck modificaton command on this deck.
-     * @param {InvCmd} cmd - Invader Deck modification command
+     * @param {import("../data/typedef.mjs").InvCmd} cmd - Invader Deck modification command
      * @param {number | undefined} refIndex - Reference index from forEach
      * @returns {number | boolean} - true/false for single command success; or count of successes of forEach
      */
@@ -215,6 +215,7 @@ function clamp(min, value, max) {
 
 /**
  * Builder function to make default invader deck with indexes for debugging
+ * @yields {CardRef}
  */
 function * deckBuilder() {
     let j = 0; //whole deck index
@@ -255,12 +256,12 @@ const specials = {
 
 /**
  * Build the Invader Deck with the provided modification commands.
- * @param {InvCmd[]} invCmds 
+ * @param {import("../data/typedef.mjs").InvCmd[]} invCmds 
  * @returns {InvaderDeck}
  */
 export function buildInvaderDeck(invCmds) {
     const invDeck = new InvaderDeck();
-    const changes = 0;
+    let changes = 0;
     for (const cmd of invCmds) {
         changes += invDeck.doCommand(cmd);
     }
@@ -281,32 +282,8 @@ export function buildInvaderDeck(invCmds) {
 /** 
  * Card Reference in the invader deck.
  * @typedef {Object} CardRef
- * @property {number | undefined} s - stage of the invader card; omitted if card doesn't have a stage.
+ * @property {import("../data/typedef.mjs").InvaderStage | undefined} s - stage of the invader card; omitted if card doesn't have a stage.
  * @property {number | undefined} i - original index of the card in the deck
- * @property {number | undefined} n - single character name of special card
- * @property {number | undefined} t - title of special card
- */
-
-/** 
- * Invader Command from json
- * @typedef {Object} InvCmd
- * @property {InvaderStage} e - invader stage to iterate
- * @property {InvCmd} $ - command to run for each iterated card; this command can use '?' to refer to the index of the current card.
- * @property {InvCmdQuery | undefined} m - card to move
- * @property {InvCmdQuery | undefined} r - card to remove / replace with m
- * @property {InvCmdQuery | undefined} b - card to place m below
- * @property {number} d - delta: number of cards to move m; negative is up, positive is down
- * @property {string} x - special card to exclude when making the deck
- */
-
-/**
- * Invader Card Stage
- * @typedef {1|2|3|0} InvaderStage - Stage 1, 2, or 3; or 0 for any stage.
- */
-
-/**
- * Invader Command Query to find card(s) in deck.
- * 
- * Expected String values: '?' for the index passed from forEach; or a member of {@link specials}.
- * @typedef {[InvaderStage, number] | string} InvCmdQuery
+ * @property {string | undefined} n - single character name of special card
+ * @property {string | undefined} t - title of special card
  */

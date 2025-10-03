@@ -5,6 +5,7 @@
  * @returns {string} text, enhanced with icons and HTML formatting.
  */
 export function enhanceGameText(text) {
+    if (!text) { return ''; }
     return text
         .replace(rxIconTogether, keepTogether)
         .replace(rxLandNum, keepTogether)
@@ -35,7 +36,7 @@ function iconHtml(iconName) {
         case 'SacredSite':
         case 'Fast':
         case 'Slow':
-            return `<img src="./img/icon/${iconName}" class="icon" alt="${iconName}">`;
+            return `<img src="./img/icon/${iconName}.svg" class="icon" alt="${iconName}" title="${iconName}">`;
         default:
             return null;
     }

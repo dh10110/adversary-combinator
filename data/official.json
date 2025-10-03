@@ -163,7 +163,7 @@
     { "ref": "rus3", "adv": "rus", "type": "level", "lvl": 3, "name": "Competition Among Hunters", "timing": ["ravage"], "order": [2565], "text": "Ravage Cards also match lands with 3 or more [Explorer].", "xtext": "(If the land already matched the Ravage Card, it still Ravages just once.)" },
     { "ref": "rus4", "adv": "rus", "type": "level", "lvl": 4, "name": "Accelerated Exploitation", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, put 1 Stage III Card after each Stage II Card.", "inv": [{ "e": 2, "$": {"m": [3,-1],"b":"?"} }] },
     { "ref": "rus5", "adv": "rus", "type": "level", "lvl": 5, "name": "Entrench in the Face of Fear", "timing": ["fear-deck"], "order": [1155], "text": "Put an unused Stage II Invader Card under the top 3 Fear Cards, and an unused Stage III Card under the top 7 Fear Cards. When one is revealed, immediately place it in the Build space (face-up)." },
-    { "ref": "rus6", "adv": "rus", "type": "level", "lvl": 6, "name": "Pressure for Fast Profit", "timing": ["after:ravage"], "order": [2569], "text": "After the Ravage Step of tun 2+, on each board where it added no [Blight]: In the land with the most [Explorer] (min. 1), add 1 [Explorer] and 1 [Town]." }
+    { "ref": "rus6", "adv": "rus", "type": "level", "lvl": 6, "name": "Pressure for Fast Profit", "timing": ["after:ravage"], "order": [2569], "text": "After the Ravage Step of turn 2+, on each board where it added no [Blight]: In the land with the most [Explorer] (min. 1), add 1 [Explorer] and 1 [Town]." }
 ]
 },
 {

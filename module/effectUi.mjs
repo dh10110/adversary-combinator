@@ -37,7 +37,7 @@ export function makeEffectElement(e, follow) {
         <span class="altag_flag" style="--flag-bg: url('./img/flag-svg/${e.adv}.svg')"></span>
         <output class="altag_level">${e.lvl}</output>
     </span>
-    <div class="effect-detail">
+    <div class="effect-detail effect-type-${e.type}">
         <div class="effect-name">
             ${e.type === 'loss' ? "Loss Condition" : ""}
             ${e.type === 'esc' ? "Escalation " + (e.adv === (follow && follow.adv||'') ? "Ⅲ" : "<img class='icon' src='./img/icon/Escalation.svg'>") : ""}
@@ -106,7 +106,10 @@ function makeInvaderDeckElement(invDeck) {
         sb.push(`; where ${where.join(', ')}`);
     }
     if (exclude.length > 0) {
-        sb.push(`; exclude ${exclude.map(c => c.t).join(', ')}`)
+        sb.push(`; exclude ${exclude.map(c => c.t).join(', ')}`);
+    }
+    if (invDeck.isDefault) {
+        sb.push(' <i>(Default)</i>');
     }
 
     const html = `
@@ -124,65 +127,8 @@ function makeInvaderDeckElement(invDeck) {
     return makeElement('li', html);
 }
 
-/*
-const iconReplacements = {
-    city: '<img src="./img/icon/City.svg" class="icon" alt="City" />',
-    town: '<img src="./img/icon/Town.svg" class="icon" alt="Town" />',
-    explorer: '<img src="./img/icon/Explorer.svg" class="icon" alt="Explorer" />',
-    fear: '<img src="./img/icon/Fear.svg" class="icon" alt="Fear" />',
-    blight: '<img src="./img/icon/Blight.svg" class="icon" alt="Blight" />',
-    dahan: '<img src="./img/icon/Dahan.svg" class="icon" alt="Dahan" />',
-    beasts: '<img src="./img/icon/Beasts.svg" class="icon" alt="Beasts" />',
-    disease: '<img src="./img/icon/Disease.svg" class="icon" alt="Disease" />',
-    presence: '<img src="./img/icon/Presence.svg" class="icon" alt="Presence" />',
-    fast: '<img src="./img/icon/Fast.svg" class="icon clr-fast" alt="Fast" />',
-};
-
-const rxfIcon = String.raw`\[([A-Za-z]+)\]`;
-
-//const rxIcon = /\[([A-Za-z]+)\]/g;
-const rxIcon = new RegExp(rxfIcon, 'g');
-function iconMatch(match, g1) {
-    const key = g1.toLowerCase();
-    const repl = iconReplacements[key];
-    return repl || match;
-}
-
-const rxRange = /\[Range:([^\]]+)\]/g;
-function rangeMatch(match, g1) {
-    //return `<span class="range"><b>${g1}</b><img src="./img/RangeArrow.svg" /></span>`;
-    return `<span class="inline-range">${g1}</span>`;
-}
-
-const romanChars = ' ⅠⅡⅢ';
-const rxStage = /Stage (I{1,3})/g;
-function stageMatch(match, g1) {
-    return `<span class="keep-together">Stage ${romanChars[g1.length]}</span>`;
-}
-
-
-const rxLandNum = /land #[1-8]/g;
-const rxIconTogether = new RegExp(`((?:[0-9]+|a|no) )?${rxfIcon}(/${rxfIcon})?[.,]?`, 'ig');
-
-function keepTogether(match) {
-    return `<span class="keep-together">${match}</span>`;
-}
-
-
-function prettyHtml(text) {
-    if (!text) { return ''; }
-    return text
-        .replace(rxIconTogether, keepTogether)
-        .replace(rxLandNum, keepTogether)
-        .replace(rxStage, stageMatch)
-        .replace(rxRange, rangeMatch)
-        .replace(rxIcon, iconMatch);
-        
-}
-*/
 
 function enhanceText(text) {
-    //return prettyHtml(text);
     return enhanceGameText(text);
 }
 
