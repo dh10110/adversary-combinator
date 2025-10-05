@@ -1,3 +1,5 @@
+import { LinkedList, LinkedListNode } from "./linkedList.mjs";
+
 /**
  * Extension of Array to simplify some Invader Deck steps.
  * @extends {Array}
@@ -85,7 +87,7 @@ class DeckArray extends Array {
             if (index === null) { return {spec:true, nf: true}; }
             return {spec:true, i:index, c:this[index]};
         } else {
-            let card = specials[query];
+            let card = namedCards[query];
             if (!card) { return {spec:true, nf:true}; }
             return {spec:true, i:null, c:card};
         }
@@ -145,7 +147,7 @@ export class InvaderDeck {
     doCommand(cmd, refIndex) {
         //exclude
         if (cmd.x) {
-            this.toExclude.push(specials[cmd.x]);
+            this.toExclude.push(namedCards[cmd.x]);
         }
 
         //each
@@ -200,6 +202,125 @@ export class InvaderDeck {
     }
 }
 
+export class InvaderDeckList {
+    constructor() {
+        this.deck = new LinkedList(...deckBuilder());
+        this.toExclude = [];
+        this.isDefault = true;
+        this.namedCardNodes = makeNamedCardNodes();
+        //TODO: populate from adversaries?
+    }
+
+    /**
+     * Uses the provided query to try to locate the node containing a particular card
+     * @param {import("../data/typedef.mjs").InvCmdQuery} query 
+     * @param {LinkedListNode} refNode - reference node from each loop
+     * @returns {LocateNodeResult}
+     */
+    locate(query, refNode) {
+        if (!query) {
+            //query not specified
+            return {spec:false, node:null};
+        } else if (query === '?') {
+            //query is reference node
+            return {spec:true, node:refNode};
+        } else if (Array.isArray(query)) {
+            //query is an 'nth stage' search
+            let [stage, nth] = query;
+            let found = this.deck.findNode(stageCompareFns[stage], nth);
+            if (found === null) { return {spec:true, node:null}; }
+            return {spec:true, node:found};
+        } else {
+            //query is a named card
+            let found = this.namedCardNodes[query];
+            if (found === null) { return {spec:true, node:null}; }
+            return {spec:true, node:found};
+        }
+    }
+
+    doCommand(cmd, refNode) {
+        //exclude
+        if (cmd.x) {
+            this.toExclude.push(namedCards[cmd.x]);
+        }
+
+        //each
+        if (cmd.e) {
+            let nOk = 0;
+            let matchedNodes = [...this.deck.nodes()];
+            for (const n of matchedNodes) {
+                nOk += this.doCommand(cmd.$, n);
+            }
+            return nOk;
+        }
+
+        //Moved node (maybe reMoved?)
+        const moved = this.locate(cmd.m, refNode);
+        if (moved.spec && !moved.node) { return false; }
+
+        //rePlace?
+        const place = this.locate(cmd.p, refNode);
+        if (place.spec) {
+            if (!place.node) { return false; }
+            if (!moved.node) { return false; } //p needs m
+            place.node.replaceWith(moved);
+            return true;
+        }
+
+        //insert Below?
+        const below = this.locate(cmd.b, refNode);
+        if (below.spec) {
+            if (!below.node) { return false; }
+            if (!moved.node) { return false; } //b needs m
+            below.node.insertNodeAfter(moved); //after=below
+            return true;
+        }
+
+        //move Up?
+        if (cmd.u) {
+            const u = +cmd.u; //ensure number
+            if (u <= 0) { return false; }
+            if (!moved.node) { return false; } //u needs m
+            const above = moved.node.findNext(cmpAnyStage, u, true);
+            if (!above) { return false; }
+            above.insertNodeBefore(moved); //before=above
+            return true;
+        }
+
+        //move down/delta
+        if (cmd.d) {
+            const d = +cmd.d; //ensure number
+            if (d !== 0) { return false; }
+            const relative = moved.node.findNext(cmpAnyStage, d);
+            if (!relative) { return false; }
+            if (d < 0) {
+                //move up
+                relative.insertNodeBefore(moved);
+            } else {
+                //move down
+                relative.insertNodeAfter(moved);
+            }
+            return true;
+        }
+
+        //just m => reMove
+        moved.node.remove();
+    }
+}
+
+function cmpAnyStage(card) { return !!card.s; }
+function cmpStage1(card) { return card.s === 1; }
+function cmpStage2(card) { return card.s === 1; }
+function cmpStage3(card) { return card.s === 1; }
+const stageCompareFns = [
+    cmpAnyStage,
+    cmpStage1,
+    cmpStage2,
+    cmpStage3
+];
+
+
+
 /**
  * Sets an upper and lower bound to a value.
  * @param {*} min Minimum value
@@ -235,8 +356,9 @@ const defaultDeck = [{s:1},{s:1},{s:1}, {s:2},{s:2},{s:2},{s:2}, {s:3},{s:3},{s:
 
 /**
  * Special Cards
+ * @type {Object.<string, CardRef>}
  */
-const specials = {
+const namedCards = {
     /**
      * Coastal Lands Invader Card
      * @type {CardRef}
@@ -253,6 +375,13 @@ const specials = {
      */
     H: {n: 'H', t:'Habsburg Reminder Card'}
 };
+
+function makeNamedCardNodes() {
+    const namedNodes = {};
+    for (const k in namedCards) {
+        namedNodes[k] = new LinkedListNode(namedCards[k]);
+    }
+}
 
 /**
  * Build the Invader Deck with the provided modification commands.
@@ -279,11 +408,19 @@ export function buildInvaderDeck(invCmds) {
  */
 
 
+/**
+ * Result from the {@link InvaderDeckList} locate function.
+ * @typedef {Object} LocateNodeResult
+ * @prop {boolean} spec - true if caller specified this query
+ * @prop {LinkedListNode?} node - Result node, if found
+ */
+
+
 /** 
  * Card Reference in the invader deck.
  * @typedef {Object} CardRef
  * @property {import("../data/typedef.mjs").InvaderStage | undefined} s - stage of the invader card; omitted if card doesn't have a stage.
  * @property {number | undefined} i - original index of the card in the deck
- * @property {string | undefined} n - single character name of special card
- * @property {string | undefined} t - title of special card
+ * @property {string | undefined} n - single character name of card; omitted if not named
+ * @property {string | undefined} t - title of named card
  */
