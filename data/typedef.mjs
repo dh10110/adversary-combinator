@@ -50,6 +50,7 @@
  * @property {number[]} order - Array of order ids where this effect applies
  * @property {string} text - Text of the effect
  * @property {string} xtext - Extra (italic) text for the effect
+ * @property {string} itext - Extra (italic) text for the invader deck change effect
  * @property {InvCmd} inv - Invader Deck modification command
  * @property {string} repl - Key for indicating a higher level effects replaces a lower level effect.
 */

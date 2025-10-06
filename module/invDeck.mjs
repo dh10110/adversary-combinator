@@ -3,6 +3,7 @@ import { LinkedList, LinkedListNode } from "./linkedList.mjs";
 /**
  * Extension of Array to simplify some Invader Deck steps.
  * @extends {Array}
+ * @deprecated
  */
 class DeckArray extends Array {
     /**
@@ -87,7 +88,7 @@ class DeckArray extends Array {
             if (index === null) { return {spec:true, nf: true}; }
             return {spec:true, i:index, c:this[index]};
         } else {
-            let card = namedCards[query];
+            let card = namedCardDefs[query];
             if (!card) { return {spec:true, nf:true}; }
             return {spec:true, i:null, c:card};
         }
@@ -115,6 +116,7 @@ class DeckArray extends Array {
 
 /**
  * Class to encapsulate modifications to the Invader Deck
+ * @deprecated
  */
 export class InvaderDeck {
     /**
@@ -147,7 +149,7 @@ export class InvaderDeck {
     doCommand(cmd, refIndex) {
         //exclude
         if (cmd.x) {
-            this.toExclude.push(namedCards[cmd.x]);
+            this.toExclude.push(namedCardDefs[cmd.x]);
         }
 
         //each
@@ -202,13 +204,15 @@ export class InvaderDeck {
     }
 }
 
+/**
+ * Linked-List based Invader Deck for handling adversary changes.
+ */
 export class InvaderDeckList {
-    constructor() {
+    constructor(namedCards) {
         this.deck = new LinkedList(...deckBuilder());
         this.toExclude = [];
         this.isDefault = true;
-        this.namedCardNodes = makeNamedCardNodes();
-        //TODO: populate from adversaries?
+        this.namedCardNodes = makeNamedCardNodes(namedCards);
     }
 
     /**
@@ -227,7 +231,13 @@ export class InvaderDeckList {
         } else if (Array.isArray(query)) {
             //query is an 'nth stage' search
             let [stage, nth] = query;
-            let found = this.deck.findNode(stageCompareFns[stage], nth);
+            let fn = stageCompareFns[stage];
+            let n = Math.abs(nth);
+            let nodes = this.deck.iterateNodes(nth)
+                .filter(node => fn(node.item))
+                .drop(n - 1);
+            let result = nodes.next();
+            let found = result.value || null;
             if (found === null) { return {spec:true, node:null}; }
             return {spec:true, node:found};
         } else {
@@ -241,38 +251,52 @@ export class InvaderDeckList {
     doCommand(cmd, refNode) {
         //exclude
         if (cmd.x) {
-            this.toExclude.push(namedCards[cmd.x]);
+            this.toExclude.push(namedCardDefs[cmd.x]);
+            this.isDefault = false;
         }
 
         //each
         if (cmd.e) {
             let nOk = 0;
-            let matchedNodes = [...this.deck.nodes()];
+            const fn = stageCompareFns[cmd.e];
+            if (!fn) { return false; }
+            const matchedNodes = [...this.deck.iterateNodes(1).filter(node => fn(node.item))];
             for (const n of matchedNodes) {
                 nOk += this.doCommand(cmd.$, n);
             }
             return nOk;
         }
 
+        //Remove
+        const locRemove = this.locate(cmd.r, refNode);
+        if (locRemove.spec) {
+            if (!locRemove.node) { return false; }
+            locRemove.node.remove();
+            this.isDefault = false;
+            return true;
+        }
+
         //Moved node (maybe reMoved?)
-        const moved = this.locate(cmd.m, refNode);
-        if (moved.spec && !moved.node) { return false; }
+        const locMove = this.locate(cmd.m, refNode);
+        if (locMove.spec && !locMove.node) { return false; }
 
         //rePlace?
-        const place = this.locate(cmd.p, refNode);
-        if (place.spec) {
-            if (!place.node) { return false; }
-            if (!moved.node) { return false; } //p needs m
-            place.node.replaceWith(moved);
+        const locPlace = this.locate(cmd.p, refNode);
+        if (locPlace.spec) {
+            if (!locPlace.node) { return false; }
+            if (!locMove.node) { return false; } //p needs m
+            locPlace.node.replace(locMove.node);
+            this.isDefault = false;
             return true;
         }
 
         //insert Below?
-        const below = this.locate(cmd.b, refNode);
-        if (below.spec) {
-            if (!below.node) { return false; }
-            if (!moved.node) { return false; } //b needs m
-            below.node.insertNodeAfter(moved); //after=below
+        const locBelow = this.locate(cmd.b, refNode);
+        if (locBelow.spec) {
+            if (!locBelow.node) { return false; }
+            if (!locMove.node) { return false; } //b needs m
+            locBelow.node.addAfter(locMove.node);
+            this.isDefault = false;
             return true;
         }
 
@@ -280,10 +304,12 @@ export class InvaderDeckList {
         if (cmd.u) {
             const u = +cmd.u; //ensure number
             if (u <= 0) { return false; }
-            if (!moved.node) { return false; } //u needs m
-            const above = moved.node.findNext(cmpAnyStage, u, true);
+            if (!locMove.node) { return false; } //u needs m
+            const iter = locMove.node.iterate(-1).drop(u);
+            const above = iter.next().value;
             if (!above) { return false; }
-            above.insertNodeBefore(moved); //before=above
+            above.addBefore(locMove.node);
+            this.isDefault = false;
             return true;
         }
 
@@ -291,27 +317,30 @@ export class InvaderDeckList {
         if (cmd.d) {
             const d = +cmd.d; //ensure number
             if (d !== 0) { return false; }
-            const relative = moved.node.findNext(cmpAnyStage, d);
+            const relative = locMove.node.findNext(cmpAnyStage, d + Math.sign(d)); //+- 1 b/c 1 finds same node
             if (!relative) { return false; }
             if (d < 0) {
                 //move up
-                relative.insertNodeBefore(moved);
+                relative.insertNodeBefore(locMove.node);
             } else {
                 //move down
-                relative.insertNodeAfter(moved);
+                relative.insertNodeAfter(locMove.node);
             }
             return true;
         }
 
         //just m => reMove
-        moved.node.remove();
+        locMove.node.remove();
+        this.isDefault = false;
+        return true;
+
     }
 }
 
 function cmpAnyStage(card) { return !!card.s; }
 function cmpStage1(card) { return card.s === 1; }
-function cmpStage2(card) { return card.s === 1; }
-function cmpStage3(card) { return card.s === 1; }
+function cmpStage2(card) { return card.s === 2; }
+function cmpStage3(card) { return card.s === 3; }
 const stageCompareFns = [
     cmpAnyStage,
     cmpStage1,
@@ -339,11 +368,11 @@ function clamp(min, value, max) {
  * @yields {CardRef}
  */
 function * deckBuilder() {
-    let j = 0; //whole deck index
+    //let j = 0; //whole deck index
     for (const s of [1, 2, 3]) { //stages 1,2,3
         let n = 2 + s; //does 3×1, 4×2, 5×3
         for (let i = 0; i < n; ++i) {
-            yield {s: s, i: ++j};
+            yield {s: s, i: 10*s + i + 1};
         }
     }
 }
@@ -358,7 +387,7 @@ const defaultDeck = [{s:1},{s:1},{s:1}, {s:2},{s:2},{s:2},{s:2}, {s:3},{s:3},{s:
  * Special Cards
  * @type {Object.<string, CardRef>}
  */
-const namedCards = {
+const namedCardDefs = {
     /**
      * Coastal Lands Invader Card
      * @type {CardRef}
@@ -376,11 +405,13 @@ const namedCards = {
     H: {n: 'H', t:'Habsburg Reminder Card'}
 };
 
-function makeNamedCardNodes() {
+function makeNamedCardNodes(namedCards) {
     const namedNodes = {};
-    for (const k in namedCards) {
-        namedNodes[k] = new LinkedListNode(namedCards[k]);
+    namedNodes.C = new LinkedListNode(namedCardDefs.C);
+    for (const card of namedCards) {
+        namedNodes[card.n] = new LinkedListNode(card);
     }
+    return namedNodes;
 }
 
 /**

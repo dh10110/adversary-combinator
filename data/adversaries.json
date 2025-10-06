@@ -1,0 +1,228 @@
+[
+{
+"adv": "bp",
+"nickname": "Prussia",
+"fullname": "The Kingdom of Brandenburg-Prussia",
+"htmlname": "The Kingdom of <b>Brandenburg-Prussia</b>",
+"diff": 1,
+"set": "base",
+"levels": [
+    { "adv": "bp", "lvl": 1, "diff": 2, "fear": [0, 0, 0] },
+    { "adv": "bp", "lvl": 2, "diff": 4, "fear": [0, 0, 0] },
+    { "adv": "bp", "lvl": 3, "diff": 6, "fear": [0, 1, 0] },
+    { "adv": "bp", "lvl": 4, "diff": 7, "fear": [1, 1, 0] },
+    { "adv": "bp", "lvl": 5, "diff": 9, "fear": [1, 1, 0] },
+    { "adv": "bp", "lvl": 6, "diff": 10, "fear": [1, 1, 1] }
+],
+"effects": [
+    { "ref": "bpE", "adv": "bp", "type": "esc", "lvl": 0, "name": "Land Rush", "timing": ["before:explore"], "order": [2581], "text": "On each board with [Town]/[City], add 1 [Town] to a land without [Town]." },
+    { "ref": "bp1", "adv": "bp", "type": "level", "lvl": 1, "name": "Fast Start", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board add 1 [Town] to land #3." },
+    { "ref": "bp2", "adv": "bp", "type": "level", "lvl": 2, "name": "Surge of Colonists", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, Move the bottom-most Stage III Card just below the bottom-most Stage I Card.", "itext": "(New deck order: 111-3-2222-3333)", "inv": [{"m": [3,-1], "b":[1,-1]}] },
+    { "ref": "bp3", "adv": "bp", "type": "level", "lvl": 3, "name": "Efficient", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, remove 1 additional Stage I Card.", "itext": "(New deck order: 11-3-2222-3333)", "inv": [{"r": [1,1]}] },
+    { "ref": "bp4", "adv": "bp", "type": "level", "lvl": 4, "name": "Aggressive Timetable", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, remove 1 additional Stage II Card.", "itext": "(New deck order: 11-3-222-3333)", "inv": [{"r": [2,1]}] },
+    { "ref": "bp5", "adv": "bp", "type": "level", "lvl": 5, "name": "Ruthelessly Efficient", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, remove 1 additional Stage I Card.", "itext": "(New deck order: 1-3-222-3333)", "inv": [{"r": [1,1]}] },
+    { "ref": "bp6", "adv": "bp", "type": "level", "lvl": 6, "name": "Terrifyingly Efficient", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, remove all Stage I Cards.", "itext": "(New deck order: 3-222-3333)", "inv": [{ "e": 1, "$": {"r": "?"} }] }
+]
+},
+{
+"adv": "eng",
+"nickname": "England",
+"fullname": "The Kingdom of England",
+"htmlname": "The Kingdom of <b>England</b>",
+"diff": 1,
+"set": "base",
+"levels": [
+    { "adv": "eng", "lvl": 1, "diff": 3, "fear": [0, 1, 0] },
+    { "adv": "eng", "lvl": 2, "diff": 4, "fear": [1, 1, 0] },
+    { "adv": "eng", "lvl": 3, "diff": 6, "fear": [1, 2, 1] },
+    { "adv": "eng", "lvl": 4, "diff": 7, "fear": [1, 2, 2] },
+    { "adv": "eng", "lvl": 5, "diff": 9, "fear": [1, 2, 2] },
+    { "adv": "eng", "lvl": 6, "diff": 11, "fear": [1, 2, 1] }
+],
+"effects": [
+    { "ref": "engL", "adv": "eng", "type": "loss", "lvl": 0, "name": "Proud & Mighty Capital", "timing": ["during-play"], "order": [2005], "text": "If 7 or more [Town]/[City] are ever in a single land, the Invaders win." },
+    { "ref": "engE", "adv": "eng", "type": "esc", "lvl": 0, "name": "Building Boom", "timing": ["before:explore"], "order": [2581], "text": "On each board with [Town]/[City], Build in the land with the most [Town]/[City]." },
+    { "ref": "eng1", "adv": "eng", "type": "level", "lvl": 1, "name": "Indentured Servants Earn Land", "timing": ["build"], "order": [2575], "text": "Build Actions affect lands without Invaders, if they are adjacent to at least 2 [Town]/[City] before the Build Action." },
+    { "ref": "eng2", "adv": "eng", "type": "level", "lvl": 2, "name": "Criminals and Malcontents", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board add 1 [City] to land #1, and 1 [Town] to land #2." },
+    { "ref": "eng3a", "adv": "eng", "type": "level", "lvl": 3, "name": "High Immigration (I)", "timing": ["before:invader-deck"], "order": [1121], "text": "Put the \"High Immigration\" tile on the Invader Board, to the left of \"Ravage\". The invaders take this Build Action each Invader Phase before Ravaging. Cards slide left from Ravage to it, and from it to the discard pile. Remove the tile when a Stage II card slides onto it, putting that card in the discard.", "repl": "hi-setup" },
+    { "ref": "eng3b", "adv": "eng", "type": "level", "lvl": 3, "name": "High Immigration (I)", "timing": ["hi-build"], "order": [2555], "text": "Perform a Build Action for each card on the \"High Immigration\" tile.", "repl": "hi-build" },
+    { "ref": "eng3c", "adv": "eng", "type": "level", "lvl": 3, "name": "High Immigration (I)", "timing": ["advance"], "order": [2595], "text": "Invader Cards slide left from Ravage to \"High Immigration\", and from there to the discard pile. Remove the tile when a Stage II card slides onto it, putting that card in the discard.", "repl": "hi-advance" },
+    { "ref": "eng4a", "adv": "eng", "type": "level", "lvl": 4, "name": "High Immigration (full)", "timing": ["before:invader-deck"], "order": [1121], "text": "Put the \"High Immigration\" tile on the Invader Board, to the left of \"Ravage\". The invaders take this Build Action each Invader Phase before Ravaging. Cards slide left from Ravage to it, and from it to the discard pile. The extra Build tile remains out the entire game.", "repl": "hi-setup" },
+    { "ref": "eng4b", "adv": "eng", "type": "level", "lvl": 4, "name": "High Immigration (full)", "timing": ["hi-build"], "order": [2555], "text": "Perform a Build Action for each card on the \"High Immigration\" tile.", "repl": "hi-build" },
+    { "ref": "eng4c", "adv": "eng", "type": "level", "lvl": 4, "name": "High Immigration (full)", "timing": ["advance"], "order": [2595], "text": "Invader Cards slide left from Ravage to \"High Immigration\", and from there to the discard pile. The extra build tile remains out the entire game.", "repl": "hi-advance" },
+    { "ref": "eng5", "adv": "eng", "type": "level", "lvl": 5, "name": "Local Autonomy", "timing": ["during-play"], "order": [2005], "text": "[Town]/[City] have +1 Health." },
+    { "ref": "eng6a", "adv": "eng", "type": "level", "lvl": 6, "name": "Independent Resolve", "timing": ["fear-pool"], "order": [1165], "text": "Add 1 additional [Fear] to the Fear Pool per player in the game." },
+    { "ref": "eng6b", "adv": "eng", "type": "level", "lvl": 6, "name": "Independent Resolve", "timing": ["fear-step"], "order": [2535], "text": "During any Invader Phase where you resolve no Fear Cards, perform the Build from High Immigration twice." }
+]
+},
+{
+"adv": "swe",
+"nickname": "Sweden",
+"fullname": "The Kingdom of Sweden",
+"htmlname": "The Kingdom of <b>Sweden</b>",
+"diff": 1,
+"set": "base",
+"levels": [
+    { "adv": "swe", "lvl": 1, "diff": 2, "fear": [0, 0, 0] },
+    { "adv": "swe", "lvl": 2, "diff": 3, "fear": [0, 1, 0] },
+    { "adv": "swe", "lvl": 3, "diff": 5, "fear": [0, 1, 0] },
+    { "adv": "swe", "lvl": 4, "diff": 6, "fear": [0, 1, 1] },
+    { "adv": "swe", "lvl": 5, "diff": 7, "fear": [1, 1, 1] },
+    { "adv": "swe", "lvl": 6, "diff": 8, "fear": [1, 1, 2] }
+],
+"effects": [
+    { "ref": "sweE", "adv": "swe", "type": "esc", "lvl": 0, "name": "Swayed by the Invaders", "timing": ["explore"], "order": [2585], "text": "After Invaders Explore into each land this Phase, if that land has at least as many Invaders as [Dahan], replace 1 [Dahan] with 1 [Town]." },
+    { "ref": "swe1", "adv": "swe", "type": "level", "lvl": 1, "name": "Heavy Mining", "timing": ["ravage"], "order": [2565], "text": "If the Invaders do at least 6 Damage to the land during Ravage, add an extra [Blight].", "xtext": "(This does not cause extra cascades / [Presence] destruction.)" },
+    { "ref": "swe2", "adv": "swe", "type": "level", "lvl": 2, "name": "Population Pressure at Home", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board add 1 [City] to land #4. On boards where land #4 starts with [Blight], put that [Blight] in land #5 instead." },
+    { "ref": "swe3", "adv": "swe", "type": "level", "lvl": 3, "name": "Fine Steel for Tools and Guns", "timing": ["during-play"], "order": [2005], "text": "[Town] deal 3 Damage. [City] deal 5 Damage." },
+    { "ref": "swe4", "adv": "swe", "type": "level", "lvl": 4, "name": "Setup", "timing": ["after:initial-explore"], "order": [1909], "text": "At the end of Setup (after resolving the initial Explore Card), Accelerate the Invader Deck. On each board, add 1 [Town] to the land of the discarded terrain with the fewest Invaders.", "xtext": "(Accelerate: Discard the topmost card of the lowest Invader Stage remaining in the deck.)" },
+    { "ref": "swe5", "adv": "swe", "type": "level", "lvl": 5, "name": "Mining Rush", "timing": ["ravage"], "order": [2565], "text": "When Ravaging adds at least 1 [Blight] to a land, also add 1 [Town] to an adjacent land without [Town]/[City]. Cascading [Blight] does not cause this effect." },
+    { "ref": "swe6", "adv": "swe", "type": "level", "lvl": 6, "name": "Prospecting Outpost", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board add 1 [Town] and 1 [Blight] to land #8. The [Blight] comes from the box, not the Blight Card." }
+]
+},
+{
+"adv": "fra",
+"nickname": "France",
+"fullname": "The Kingdom of France (Plantation Colony)",
+"htmlname": "The Kingdom of <b>France</b> <i>(Plantation Colony)</i>",
+"diff": 2,
+"set": "bc",
+"levels": [
+    { "adv": "fra", "lvl": 1, "diff": 3, "fear": [0, 0, 0] },
+    { "adv": "fra", "lvl": 2, "diff": 5, "fear": [0, 1, 0] },
+    { "adv": "fra", "lvl": 3, "diff": 7, "fear": [1, 1, 0] },
+    { "adv": "fra", "lvl": 4, "diff": 8, "fear": [1, 1, 1] },
+    { "adv": "fra", "lvl": 5, "diff": 9, "fear": [1, 2, 1] },
+    { "adv": "fra", "lvl": 6, "diff": 10, "fear": [1, 2, 2] }
+],
+"effects": [
+    { "ref": "fraLa", "adv": "fra", "type": "loss", "lvl": 0, "name": "Sprawling Plantations", "timing": ["before:setup"], "order": [1001], "text": "Before Setup, return all but 7 [Town] per player to the box. Invaders win if you ever cannot place a [Town]." },
+    { "ref": "fraLb", "adv": "fra", "type": "loss", "lvl": 0, "name": "Sprawling Plantations", "timing": ["during-play"], "order": [2005], "text": "Invaders win if you ever cannot place a [Town]." },
+    { "ref": "fraE", "adv": "fra", "type": "esc", "lvl": 0, "name": "Demand for New Cash Crops", "timing": ["after:explore"], "order": [2589], "text": "After Exploring, on each board, pick a land of the shown terrain. If it has [Town]/[City], add 1 [Blight]. Otherwise, add 1 [Town]." },
+    { "ref": "fraM", "adv": "fra", "type": "mult", "lvl": 2, "name": "Multiple Adversaries: France", "timing": ["before:setup"], "order": [1001], "text": "If playing vs. France Level 2 or higher, increase the pool of available [Town] by 1 per player for each level of the other Adversary being played." },
+    { "ref": "fra1", "adv": "fra", "type": "level", "lvl": 1, "name": "Frontier Explorers", "timing": ["explore"], "order": [2585], "text": "Except during Setup: After Invaders successfully Explore into a land which had no [Town]/[City], add 1 [Explorer] there." },
+    { "ref": "fra2b", "adv": "fra", "type": "level", "lvl": 2, "name": "Slave Labour", "timing": ["invader-board"], "order": [1105], "text": "During Setup, put the \"Slave Rebellion\" Event under the top 3 cards of the Event Deck." },
+    { "ref": "fra2c", "adv": "fra", "type": "level", "lvl": 2, "name": "Slave Labour", "timing": ["build"], "order": [2575], "text": "After Invaders Build in a land with 2 [Explorer] or more, replace all but 1 [Explorer] there with an equal number of [Town]." },
+    { "ref": "fra3", "adv": "fra", "type": "level", "lvl": 3, "name": "Early Plantations", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board add 1 [Town] to the highest-numbered land without [Town]. Add 1 [Town] to land #1." },
+    { "ref": "fra4", "adv": "fra", "type": "level", "lvl": 4, "name": "Triangle Trade", "timing": ["build"], "order": [2575], "text": "Whenever Invaders Build a Coastal [City], add 1 [Town] to the adjacent land with the fewest [Town]." },
+    { "ref": "fra5", "adv": "fra", "type": "level", "lvl": 5, "name": "Slow-Healing Ecosystem", "timing": ["during-play"], "order": [2005], "text": "[Blight] that would go to the Blight Card from the island is put here instead. As soon as you have 3 [Blight] per player here, put it all on the Blight Card." },
+    { "ref": "fra6a", "adv": "fra", "type": "level", "lvl": 6, "name": "Persistent Explorers", "timing": ["initial-explore", "explore"], "order": [1905,2580], "text": "Setup and During the Explore Step: After resolving an Explore card, on each board: Add 1 [Explorer] in a land with no [Explorer]." },
+    { "ref": "fra6b", "adv": "fra", "type": "level", "lvl": 6, "name": "Persistent Explorers", "timing": ["fear-step"], "order": [2535], "text": "During Play: Fear Cards don't remove [Explorer] – when one would, you may instead push that [Explorer]." }
+]
+},
+{
+"adv": "hlc",
+"nickname": "Habsburg",
+"fullname": "The Habsburg Monarchy (Livestock Colony)",
+"htmlname": "The <b>Habsburg</b> Monarchy <i>(Livestock Colony)</i>",
+"diff": 2,
+"set": "je",
+"levels": [
+    { "adv": "hlc", "lvl": 1, "diff": 3, "fear": [0, 1, 0] },
+    { "adv": "hlc", "lvl": 2, "diff": 5, "fear": [1, 2, -1] },
+    { "adv": "hlc", "lvl": 3, "diff": 6, "fear": [1, 2, 0] },
+    { "adv": "hlc", "lvl": 4, "diff": 8, "fear": [1, 2, 0] },
+    { "adv": "hlc", "lvl": 5, "diff": 9, "fear": [1, 3, 0] },
+    { "adv": "hlc", "lvl": 6, "diff": 10, "fear": [2, 3, 0] }
+],
+"effects": [
+    { "ref": "hlcL", "adv": "hlc", "type": "loss", "lvl": 0, "name": "Irreparable Damage", "timing": ["ravage"], "order": [2565], "text": "Track how many [Blight] come off the Blight Card during Ravage Actions that do 8+ Damage to the land. If that number ever exceeds players, the Invaders win." },
+    { "ref": "hlcE", "adv": "hlc", "type": "esc", "lvl": 0, "name": "Seek Prime Territory", "timing": ["after:explore"], "order": [2589], "text": "After the Explore Step: On each board with 4 or fewer [Blight], add 1 [Town] to a land without [Town]/[Blight]. On each board with 2 or fewer [Blight], do so again." },
+    { "ref": "hlc1", "adv": "hlc", "type": "level", "lvl": 1, "name": "Migratory Herders", "timing": ["after:build"], "order": [2579], "text": "After the normal Build Step: In each land matching a Build Card, Gather 1 [Town] from a land not matching a build card. (In board/land order.)" },
+    { "ref": "hlc2a", "adv": "hlc", "type": "level", "lvl": 2, "name": "More Rural Than Urban", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board, add 1 [Town] to land #2 and 1 [Town] to the highest-numbered land without Setup symbols." },
+    { "ref": "hlc2b", "adv": "hlc", "type": "level", "lvl": 2, "name": "More Rural Than Urban", "timing": ["build"], "order": [2575], "text": "During Play, when Invaders would Build 1 [City] in an Inland land, they instead build 2 [Town]." },
+    { "ref": "hlc3", "adv": "hlc", "type": "level", "lvl": 3, "name": "Fast Spread", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, Remove 1 additional Stage I Card.", "itext": "(New deck order: 11-2222-33333)", "inv": [{"r": [1,1]}] },
+    { "ref": "hlc4", "adv": "hlc", "type": "level", "lvl": 4, "name": "Herds Thrive in Verdant Lands", "timing": ["during-play"], "order": [2005], "text": "[Town] in lands without [Blight] are Durable: they have +2 Health, and \"Destroy [Town]\" effects instead deal 2 Damage per [Town] they could Destroy. (To those [Town] only. \"Destroy all [Town]\" works normally.)" },
+    { "ref": "hlc5a", "adv": "hlc", "type": "level", "lvl": 5, "name": "Wave of Immigration", "timing": ["before:initial-explore"], "order": [1901], "text": "Before the initial Explore, put the Habsburg Reminder Card under the top 5 Invader Cards.", "inv": [{"m": "H", "b":[0,5]}] },
+    { "ref": "hlc5b", "adv": "hlc", "type": "level", "lvl": 5, "name": "Wave of Immigration", "timing": ["explore"], "order": [2585], "text": "When the Habsburg Reminder Card is revealed, on each board, add 1 [City] to a Coastal land without [City] and 1 [Town] to the 3 Inland lands with the fewest [Blight]." },
+    { "ref": "hlc6", "adv": "hlc", "type": "level", "lvl": 6, "name": "Far-Flung Herds", "timing": ["ravage"], "order": [2565], "text": "Ravages do +2 Damage (total) if any adjacent lands have [Town].", "xtext": "(This does not cause lands without Invaders to Ravage.)" }
+],
+"invs": [{"n": "H", "t": "Habsburg Reminder Card"}]
+},
+{
+"adv": "rus",
+"nickname": "Russia",
+"fullname": "The Tsardom of Russia",
+"htmlname": "The Tsardom of <b>Russia</b>",
+"diff": 1,
+"set": "je",
+"levels": [
+    { "adv": "rus", "lvl": 1, "diff": 3, "fear": [0, 0, 1] },
+    { "adv": "rus", "lvl": 2, "diff": 4, "fear": [1, 0, 1] },
+    { "adv": "rus", "lvl": 3, "diff": 6, "fear": [1, 1, 0] },
+    { "adv": "rus", "lvl": 4, "diff": 7, "fear": [1, 1, 1] },
+    { "adv": "rus", "lvl": 5, "diff": 9, "fear": [1, 2, 1] },
+    { "adv": "rus", "lvl": 6, "diff": 11, "fear": [2, 2, 1] }
+],
+"effects": [
+    { "ref": "rusL", "adv": "rus", "type": "loss", "lvl": 0, "name": "Hunters Swarm the Island", "timing": ["during-play"], "order": [2005], "text": "Put [Beasts] Destroyed by Adversary rules on the [Russia] panel. If there are ever more [Beasts] on this panel than on the island, the Invaders win." },
+    { "ref": "rusE", "adv": "rus", "type": "esc", "lvl": 0, "name": "Stalk the Predators", "timing": ["before:explore"], "order": [2581], "text": "On each board: Add 2 [Explorer] (total) among lands with [Beasts]. If you can't, instead add 2 [Explorer] among lands with [Beasts] on a different board." },
+    { "ref": "rus1a", "adv": "rus", "type": "level", "lvl": 1, "name": "Hunters Seek Shell and Hide", "timing": ["adv-island"], "order": [1255], "text": "During Setup, on each board, add 1 [Beasts] and 1 [Explorer] to the highest-numbered land without [Town]/[City]." },
+    { "ref": "rus1b", "adv": "rus", "type": "level", "lvl": 1, "name": "Hunters Seek Shell and Hide", "timing": ["during-play"], "order": [2005], "text": "During Play, [Explorer] do +1 Damage." },
+    { "ref": "rus1c", "adv": "rus", "type": "level", "lvl": 1, "name": "Hunters Seek Shell and Hide", "timing": ["ravage"], "order": [2565], "text": "When Ravage adds [Blight] to a land (including cascades), Destroy 1 [Beasts] in that land." },
+    { "ref": "rus2", "adv": "rus", "type": "level", "lvl": 2, "name": "A Sense for Impending Disaster", "timing": ["during-play"], "order": [2005], "text": "The first time each Action would Destroy [Explorer]: If possible, 1 of those [Explorer] is instead Pushed; 1 [Fear] when you do so." },
+    { "ref": "rus3", "adv": "rus", "type": "level", "lvl": 3, "name": "Competition Among Hunters", "timing": ["ravage"], "order": [2565], "text": "Ravage Cards also match lands with 3 or more [Explorer].", "xtext": "(If the land already matched the Ravage Card, it still Ravages just once.)" },
+    { "ref": "rus4", "adv": "rus", "type": "level", "lvl": 4, "name": "Accelerated Exploitation", "timing": ["invader-deck"], "order": [1125], "text": "When making the Invader Deck, put 1 Stage III Card after each Stage II Card.", "itext": "(New deck order: 111-2-3-2-3-2-3-2-33)", "inv": [{ "e": 2, "$": {"m": [3,-1],"b":"?"} }] },
+    { "ref": "rus5", "adv": "rus", "type": "level", "lvl": 5, "name": "Entrench in the Face of Fear", "timing": ["fear-deck"], "order": [1155], "text": "Put an unused Stage II Invader Card under the top 3 Fear Cards, and an unused Stage III Card under the top 7 Fear Cards. When one is revealed, immediately place it in the Build space (face-up)." },
+    { "ref": "rus6", "adv": "rus", "type": "level", "lvl": 6, "name": "Pressure for Fast Profit", "timing": ["after:ravage"], "order": [2569], "text": "After the Ravage Step of turn 2+, on each board where it added no [Blight]: In the land with the most [Explorer] (min. 1), add 1 [Explorer] and 1 [Town]." }
+]
+},
+{
+"adv": "sco",
+"nickname": "Scotland",
+"fullname": "The Kingdom of Scotland",
+"htmlname": "The Kingdom of <b>Scotland</b>",
+"diff": 1,
+"set": "ff",
+"levels": [
+    { "adv": "sco", "lvl": 1, "diff": 3, "fear": [0, 1, 0] },
+    { "adv": "sco", "lvl": 2, "diff": 4, "fear": [1, 1, 0] },
+    { "adv": "sco", "lvl": 3, "diff": 6, "fear": [1, 2, 1] },
+    { "adv": "sco", "lvl": 4, "diff": 7, "fear": [2, 2, 1] },
+    { "adv": "sco", "lvl": 5, "diff": 8, "fear": [2, 3, 1] },
+    { "adv": "sco", "lvl": 6, "diff": 10, "fear": [3, 3, 1] }
+],
+"effects": [
+    { "ref": "scoL", "adv": "sco", "type": "loss", "lvl": 0, "name": "Trade Hub", "timing": ["during-play"], "order": [2005], "text": "If the number of Coastal lands with [City] is ever greater than (2 × # of boards), the Invaders win." },
+    { "ref": "scoE", "adv": "sco", "type": "esc", "lvl": 0, "name": "Ports Sprawl Outward", "timing": ["before:explore"], "order": [2581], "text": "(Before Exploring) On the single board with the most Coastal [Town]/[City], add 1 [Town] to the N lands with the fewest [Town]. (N = # of players.)" },
+    { "ref": "scoM", "adv": "sco", "type": "mult", "lvl": 0, "name": "Multiple Adversaries: Scotland", "timing": ["setup"], "order": [1005], "text": "If the other Adversary's Setup instructions would add [City] to a Coastal land other than land #2, instead add the [City] to an adjacent Inland land." },
+    { "ref": "sco1", "adv": "sco", "type": "level", "lvl": 1, "name": "Trading Port", "timing": ["explore"], "order": [2585], "text": "During Play, in Coastal lands, Explore Cards add 1 [Town] instead of 1 [Explorer]. \"Coastal Lands\" Invader Cards do this for a maximum of 2 lands per board." },
+    { "ref": "sco2a", "adv": "sco", "type": "level", "lvl": 2, "name": "Seize Opportunity", "timing": ["adv-island"], "order": [1255], "text": "During Setup, add 1 [City] to land #2." },
+    { "ref": "sco2b", "adv": "sco", "type": "level", "lvl": 2, "name": "Seize Opportunity", "timing": ["invader-deck"], "order": [1125], "text": "Place \"Coastal Lands\" as the 3rd Stage II Card, and move the two Stage II Cards above it up by one.", "itext": "(New deck order: 11-22-1-C2-33333, where C is the Stage II Coastal Lands Card.)", "inv": [{"m": "C","p": [2,3]}, {"m": [2,1],"u": 1}, {"m": [2,2],"u": 1}] },
+    { "ref": "sco3", "adv": "sco", "type": "level", "lvl": 3, "name": "Chart the Coastline", "timing": ["build"], "order": [2575], "text": "In Coastal lands, Build Cards affect lands without Invaders, as long as there is an adjacent [City]." },
+    { "ref": "sco4", "adv": "sco", "type": "level", "lvl": 4, "name": "Ambition of a Minor Nation", "timing": ["invader-deck"], "order": [1125], "text": "During Setup, replace the bottom Stage I Card with the bottom Stage III Card.", "itext": "(New deck order: 11-22-3-C2-3333)", "inv": [{"m": [3,-1],"p": [1,-1]}] },
+    { "ref": "sco5", "adv": "sco", "type": "level", "lvl": 5, "name": "Runoff and Bilgewater", "timing": ["ravage"], "order": [2565], "text": "After a Ravage Action add [Blight] to a Coastal land, add 1 [Blight] to that board's Ocean (without cascading). Treat the Ocean as a Coastal Wetland for this rule and for [Blight] removal/movement." },
+    { "ref": "sco6", "adv": "sco", "type": "level", "lvl": 6, "name": "Exports Fuel Inward Growth", "timing": ["after:ravage"], "order": [2569], "text": "After the Ravage Step, add 1 [Town] to each Inland land that matches a Ravage Card and is within [Range:1] of [Town]/[City]." }
+]
+},
+{
+"adv": "hme",
+"nickname": "Mining",
+"fullname": "Habsburg Mining Expedition",
+"htmlname": "Habsburg <b>Mining</b> Expedition",
+"diff": 1,
+"set": "ni",
+"levels": [
+    { "adv": "hme", "lvl": 1, "diff": 3, "fear": [0, 0, 0] },
+    { "adv": "hme", "lvl": 2, "diff": 4, "fear": [0, 0, 1] },
+    { "adv": "hme", "lvl": 3, "diff": 5, "fear": [0, 1, 1] },
+    { "adv": "hme", "lvl": 4, "diff": 7, "fear": [1, 1, 1] },
+    { "adv": "hme", "lvl": 5, "diff": 9, "fear": [1, 2, 1] },
+    { "adv": "hme", "lvl": 6, "diff": 10, "fear": [1, 2, 1] }
+],
+"effects": [
+    { "ref": "hmeL", "adv": "hme", "type": "loss", "lvl": 0, "name": "Land Stripped Bare", "timing": ["at-end:fast-phase"], "order": [2308], "text": "At the end of the [Fast] Phase, the Invaders win if any land has at least 8 total Invaders/[Blight] (combined)." },
+    { "ref": "hmeE", "adv": "hme", "type": "esc", "lvl": 0, "name": "Mining Tunnels", "timing": ["after:advance"], "order": [2599], "text": "After Advancing Invader Cards: On each board, Explore in 2 lands whose terrains don't match a Ravage or Build Card (no source required)." },
+    { "ref": "hme1a", "adv": "hme", "type": "level", "lvl": 1, "name": "Avarice Rewarded", "timing": ["ravage"], "order": [2565], "text": "When [Blight] added by a Ravage Action would cascade, instead Upgrade 1 [Explorer]/[Town] (before [Dahan] counterattack)." },
+    { "ref": "hme1b", "adv": "hme", "type": "level", "lvl": 1, "name": "Ceaseless Mining", "timing": ["during-play"], "order": [2005], "text": "Lands with 3 or more invaders are Mining lands." },
+    { "ref": "hme1c", "adv": "hme", "type": "level", "lvl": 1, "name": "Ceaseless Mining", "timing": ["ravage", "build"], "order": [2565,2570], "text": "In Mining lands, [Disease] and modifiers to [Disease] affect Ravage Actions as though they were Build Actions." },
+    { "ref": "hme1d", "adv": "hme", "type": "level", "lvl": 1, "name": "Ceaseless Mining", "timing": ["build"], "order": [2575], "text": "In Mining lands, during the Build Step, Build Cards cause Ravage Actions instead of Build Actions." },
+    { "ref": "hme2", "adv": "hme", "type": "level", "lvl": 2, "name": "Miners Come From Far and Wide", "timing": ["adv-island"], "order": [1255], "text": "Setup: Add 1 [Explorer] in each land with no [Dahan]. Add 1 [Disease] and 1 [City] in the highest-numbered land with a [Town] Setup symbol." },
+    { "ref": "hme3", "adv": "hme", "type": "level", "lvl": 3, "name": "Mining Boom (I)", "timing": ["after:build"], "order": [2579], "text": "After the Build Step, on each board: Choose a land with [Explorer]. Upgrade 1 [Explorer] there.", "repl": "mining-boom" },
+    { "ref": "hme4", "adv": "hme", "type": "level", "lvl": 4, "name": "Untapped Salt Deposits", "timing": ["invader-deck"], "order": [1125], "text": "Setup: Remove the Stage II 'Coastal Lands' card before randomly choosing Stage II Cards. Place the 'Salt Deposits' card in place of the 2nd Stage II card.", "itext": "(New deck order: 111-2S22-33333, where S is the Salt Deposits card. Escalation ignores S.)", "inv": [{"x": "C", "m": "S","p": [2,2]}] },
+    { "ref": "hme5", "adv": "hme", "type": "level", "lvl": 5, "name": "Mining Boom (II)", "timing": ["after:build"], "order": [2579], "text": "Instead of Mining Boom (I), after the Build Step, on each board: Choose a land with [Explorer]. Build there, then Upgrade 1 [Explorer].", "xtext": "(Build normally in a Mining land.)", "repl": "mining-boom" },
+    { "ref": "hme6", "adv": "hme", "type": "level", "lvl": 6, "name": "The Empire Ascendant", "timing": ["initial-explore", "explore"], "order": [1905,2580], "text": "Setup and During the Explore Step: On boards with 3 or fewer [Blight]: Add +1 [Explorer] in each land successfully explored. (Max 2 lands per board per Explore Card.)" }
+],
+"invs": [{"n": "S", "s": 2, "t": "Salt Deposits"}]
+}
+]

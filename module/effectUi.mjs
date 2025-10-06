@@ -1,6 +1,6 @@
-import officialData from "../data/official.json" with { type: "json" };
+import officialData from "../data/adversaries.json" with { type: "json" };
 import { enhanceGameText } from "./gameText.mjs";
-import { buildInvaderDeck, InvaderDeck } from "./invDeck.mjs";
+import { InvaderDeck, InvaderDeckList } from "./invDeck.mjs";
 import { SelAdv, SelPair } from "./models.mjs";
 import { buildTimingTree, TimingPeriod } from "./timing.mjs";
 
@@ -43,9 +43,10 @@ export function makeEffectElement(e, follow) {
             ${e.type === 'esc' ? "Escalation " + (e.adv === (follow && follow.adv||'') ? "Ⅲ" : "<img class='icon' src='./img/icon/Escalation.svg'>") : ""}
         </div>
         <div>
-            <output class="effect-name">${e.name}</output>
-            <output class="effect-text">${enhanceText(e.text)}</output>
-            <output class="effect-xtext">${enhanceText(e.xtext)}</output>
+            <span class="effect-name">${e.name}</span>
+            <span class="effect-text">${enhanceText(e.text)}</span>
+            <span class="effect-xtext">${enhanceText(e.xtext)}</span>
+            <span class="effect-xtext keep-together">${enhanceText(e.itext)}</span>
         </div>
     </div>
 </article>
@@ -80,7 +81,7 @@ function makeFearElement(fear) {
 
 /**
  * Make an HTML Element to output the Invader Deck
- * @param {InvaderDeck} invDeck 
+ * @param {InvaderDeckList} invDeck 
  * @returns {HTMLElement} Created HTML Element
  */
 function makeInvaderDeckElement(invDeck) {
@@ -191,7 +192,8 @@ export function combineAdversaries(selection) {
     $play.innerHTML = '';
 
     //Invader Deck
-    var invDeck = makeInvaderDeck(timingTree);
+    const addedCards = [...leader.invs || [], ...follow.invs || []];
+    var invDeck = makeInvaderDeck(timingTree, addedCards);
     $setup.appendChild(makeInvaderDeckElement(invDeck));
 
     //Level for Fear
@@ -229,12 +231,23 @@ function showEffects(period, $box, follow) {
  * @param {TimingPeriod} timingTree - Root of the gameplay timing tree
  * @returns {InvaderDeck}
  */
-function makeInvaderDeck(timingTree) {
+function makeInvaderDeck(timingTree, namedCards = []) {
+    /*
     const invCmds = [];
     for (const effect of timingTree.iterateEffectsRecursive()) {
         if (effect.inv) { invCmds.push(...effect.inv); }
     }
     return buildInvaderDeck(invCmds);
+    */
+    const deck = new InvaderDeckList(namedCards);
+    for (const effect of timingTree.iterateEffectsRecursive()) {
+        if (effect.inv) {
+            for (const invCmd of effect.inv) {
+                deck.doCommand(invCmd);
+            }
+        }
+    }
+    return deck;
 }
 
 

@@ -1,4 +1,4 @@
-import officialData from "../data/official.json" with { type: "json" };
+import officialData from "../data/adversaries.json" with { type: "json" };
 import { makeEffectElement } from "./effectUi.mjs";
 import { initializeChooserUi } from "./chooserUi.mjs";
 
