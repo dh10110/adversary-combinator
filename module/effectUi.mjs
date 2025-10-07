@@ -1,6 +1,6 @@
 import officialData from "../data/adversaries.json" with { type: "json" };
 import { enhanceGameText } from "./gameText.mjs";
-import { InvaderDeck, InvaderDeckList } from "./invDeck.mjs";
+import { InvaderDeckList } from "./invDeck.mjs";
 import { SelAdv, SelPair } from "./models.mjs";
 import { buildTimingTree, TimingPeriod } from "./timing.mjs";
 
@@ -232,13 +232,6 @@ function showEffects(period, $box, follow) {
  * @returns {InvaderDeck}
  */
 function makeInvaderDeck(timingTree, namedCards = []) {
-    /*
-    const invCmds = [];
-    for (const effect of timingTree.iterateEffectsRecursive()) {
-        if (effect.inv) { invCmds.push(...effect.inv); }
-    }
-    return buildInvaderDeck(invCmds);
-    */
     const deck = new InvaderDeckList(namedCards);
     for (const effect of timingTree.iterateEffectsRecursive()) {
         if (effect.inv) {
