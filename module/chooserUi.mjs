@@ -1,4 +1,4 @@
-import officialData from "../data/official.json" with { type: "json" };
+import officialData from "../data/adversaries.json" with { type: "json" };
 import { SelPair } from "./models.mjs";
 import { combineAdversaries } from "./effectUi.mjs";
 

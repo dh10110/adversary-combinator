@@ -32,7 +32,6 @@ export function makeElement(tag, htmlContent, classes) {
  */
 export function makeEffectElement(e, follow) {
     const html = `
-<article data-ref="${e.ref}" class="adversary-effect">
     <span class="altag">
         <span class="altag_flag" style="--flag-bg: url('./img/flag-svg/${e.adv}.svg')"></span>
         <output class="altag_level">${e.lvl}</output>
@@ -49,9 +48,10 @@ export function makeEffectElement(e, follow) {
             <span class="effect-xtext keep-together">${enhanceText(e.itext)}</span>
         </div>
     </div>
-</article>
     `;
-    return makeElement('li', html);
+    const elem = makeElement('article', html, 'adversary-effect');
+    elem.dataset.ref = e.ref;
+    return elem;
 }
 
 /**
@@ -61,7 +61,6 @@ export function makeEffectElement(e, follow) {
  */
 function makeFearElement(fear) {
     const html = `
-<article data-ref="fear" class="adversary-effect">
     <span class="">
         Fear
     </span>
@@ -74,9 +73,10 @@ function makeFearElement(fear) {
             ${fear[2]}
         </div>
     </div>
-</article>
     `;
-    return makeElement('li', html);
+    const elem = makeElement('article', html, 'adversary-effect');
+    elem.dataset.ref = 'fear';
+    return elem;
 }
 
 /**
@@ -114,7 +114,6 @@ function makeInvaderDeckElement(invDeck) {
     }
 
     const html = `
-<article data-ref="invader" class="adversary-effect">
     <span class="">
         Inv
     </span>
@@ -123,9 +122,10 @@ function makeInvaderDeckElement(invDeck) {
             ${sb.join('')}
         </div>
     </div>
-</article>
     `;
-    return makeElement('li', html);
+    const elem = makeElement('article', html, 'adversary-effect');
+    elem.dataset.ref = 'invader';
+    return elem;
 }
 
 
@@ -186,8 +186,8 @@ export function combineAdversaries(selection) {
     });
 
     //Clear the holders
-    const $setup = document.querySelector('#setup-effects > ul');
-    const $play = document.querySelector('#play-effects > ul');
+    const $setup = document.querySelector('#setup-effects > [data-container]');
+    const $play = document.querySelector('#play-effects > [data-container]');
     $setup.innerHTML = '';
     $play.innerHTML = '';
 

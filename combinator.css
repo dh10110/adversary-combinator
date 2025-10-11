@@ -57,7 +57,7 @@ body {
     }
 }
 
-button, input { font-family: inherit; }
+button, input { font-family: inherit; font-size: inherit; }
 
 button { cursor: pointer; }
 [type="range"] { cursor: pointer; }
@@ -66,6 +66,7 @@ button { cursor: pointer; }
 .adversary-selection {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
+    /* grid-template-rows: 30% 2em 30%; */
 
     column-gap: 0.5ch;
     max-width: 65ch;
@@ -264,6 +265,7 @@ button { cursor: pointer; }
         padding: 1ch;
         background-color: hsl(0 0 100 / 0.8);
         border: 1px solid hsl(0 0 0 / 0.8);
+        border-color: rgb(from var(--local-color) r g b / 0.8);
         border-radius: 1ch;
         corner-shape: scoop;
 
@@ -325,6 +327,19 @@ button { cursor: pointer; }
 
 .effect-list {
     margin-block: 2em;
+
+    > [data-container] {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.5ch;
+        
+        > article {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-template-columns: subgrid;
+        }
+    }
+
     > ul {
         display: grid;
         grid-template-columns: auto 1fr;

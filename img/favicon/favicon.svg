@@ -1,0 +1,8 @@
+<svg width="33.908" height="60" viewBox="0 0 8.971 15.875" xmlns="http://www.w3.org/2000/svg">
+    <!--building-->
+    <path d="M5.81 4.778 H2.57 v2.434 H0 v8.663 h8.663 V7.212 H5.809 Z" style="fill:#8A00C4;"/>
+    <!--pole-->
+    <path d="M4.425 4.778 V0 H3.922 v4.778 Z" style="fill:#606060;"/>
+    <!--flag-->
+    <path d="M4.425 2.228 L8.97 .917 4.425 .056 Z" style="fill:#c70000;"/>
+</svg>
