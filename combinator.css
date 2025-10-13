@@ -1,14 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-    --bg: light-dark(#ffffff, #1a1a1a);
-    --fg: light-dark(#333333, #f0f0f0);
+    --bg: #ffffff;
+    --fg: #333333;
     --theme-color: #8A00C4;
-    --header-bg: light-dark(#8A00C4, #eeeeee);
-    --header-fg: light-dark(#fafafa, #333333);
+    --header-bg: var(--theme-color);
+    --header-fg: #fafafa;
     --leader-color: var(--theme-color);
     --follower-color: oklch(from var(--theme-color) l c 120);
     --loss-color: oklch(from var(--theme-color) l c 30);
+    --theme-grey: oklch(from var(--theme-color) l 0 0);
+
+    @media (prefers-color-scheme: dark) {
+        --bg: #1a1a1a;
+        --fg: #f0f0f0;
+    }
 }
 
 h1, h2, h3 {
@@ -57,7 +63,7 @@ body {
     }
 }
 
-button, input { font-family: inherit; font-size: inherit; }
+button, input { font: inherit; }
 
 button { cursor: pointer; }
 [type="range"] { cursor: pointer; }
@@ -120,6 +126,8 @@ button { cursor: pointer; }
 
 .adversary-selection > dialog {
     --local-color: #888;
+    background-color: var(--bg);
+    color: var(--fg);
     border-color: var(--local-color);
     padding: 0;
 
@@ -199,10 +207,76 @@ button { cursor: pointer; }
 
 }
 
+@property --combine-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+@keyframes rotate-border {
+    to { --combine-angle: 360deg; }
+}
+@property --gradient-alpha {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1.0;
+}
+
+
+#combine-button {
+    display: block;
+    margin: 1em auto;
+    padding: 1em 2em;
+    font-family: 'Josefin Sans', sans-serif;
+
+    border: 4px solid transparent;
+    border-radius: 1em;
+    corner-shape: squircle;
+
+    --clr1: var(--theme-grey);
+    --clr2: var(--theme-grey);
+    --gradient-alpha: 0.5;
+    --clr1a: oklch(from var(--clr1) l c h / var(--gradient-alpha));
+    --clr1b: oklch(from var(--clr1) l c h / calc(var(--gradient-alpha)/2));
+    --clr2a: oklch(from var(--clr2) l c h / var(--gradient-alpha));
+    --clr2b: oklch(from var(--clr2) l c h / calc(var(--gradient-alpha)/2));
+
+    background: 
+        linear-gradient(Canvas 0 0) padding-box, 
+        conic-gradient(
+            from var(--combine-angle),
+            var(--clr1b),
+            var(--clr1a) 170deg 180deg,
+            var(--clr2b) 180deg,
+            var(--clr2a) 350deg 360deg
+        ) border-box;
+
+    animation: rotate-border 4s linear infinite paused;
+    transition: --gradient-alpha 0.2s linear;
+
+    &:hover,
+    &:focus {
+        animation-play-state: running;
+        filter: brightness(0.97);
+        --gradient-alpha: 1.0;
+    }
+    &[data-leader=y] {
+        --clr2: var(--leader-color);
+    }
+    &[data-follow=y] {
+        --clr1: var(--follower-color);
+    }
+}
+
+
+
 
 .icon {
     max-width: 1em;
     max-height: 1em;
+
+    @media (prefers-color-scheme: dark) {
+        filter: invert();
+    }
 }
 .inline-range {
     background-image: url(./img/icon/RangeArrow.svg);
@@ -235,8 +309,6 @@ button { cursor: pointer; }
     background-size: cover;
     background-repeat: no-repeat;
 
-    text-shadow: white 0 0 1px, white 0 0 3px, white 0 0 6px;
-
     border: 1px solid silver;
     border-radius: 3px;
 
@@ -263,7 +335,8 @@ button { cursor: pointer; }
     & .flag-text {
         justify-self: center;
         padding: 1ch;
-        background-color: hsl(0 0 100 / 0.8);
+        background-color: hsl(from var(--bg) h s l / 0.8);
+        color: var(--fg);
         border: 1px solid hsl(0 0 0 / 0.8);
         border-color: rgb(from var(--local-color) r g b / 0.8);
         border-radius: 1ch;
@@ -312,7 +385,7 @@ button { cursor: pointer; }
         padding-left: 3px;
     }
     &.effect-type-mult {
-        border-left: 5px solid oklch(from var(--theme-color) l 0 0);
+        border-left: 5px solid var(--theme-gray);
         padding-left: 3px;
     }
 }

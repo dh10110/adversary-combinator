@@ -3,7 +3,7 @@ import { makeEffectElement } from "./effectUi.mjs";
 import { initializeChooserUi } from "./chooserUi.mjs";
 
 document.addEventListener('DOMContentLoaded', function () {
-
+    /*
     const $out = document.getElementById('debug');
     officialData.forEach(a => {
         a.effects.forEach(e => {
@@ -11,6 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
             $out.appendChild(div);
         });
     });
-
+    */
     initializeChooserUi();
 });

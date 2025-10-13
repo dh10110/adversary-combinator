@@ -3,7 +3,7 @@
 "adv": "bp",
 "nickname": "Prussia",
 "fullname": "The Kingdom of Brandenburg-Prussia",
-"htmlname": "The Kingdom of <b>Brandenburg-Prussia</b>",
+"htmlname": "The Kingdom of Brandenburg-<b>Prussia</b>",
 "diff": 1,
 "set": "base",
 "levels": [
@@ -137,7 +137,7 @@
     { "ref": "hlc5b", "adv": "hlc", "type": "level", "lvl": 5, "name": "Wave of Immigration", "timing": ["explore"], "order": [2585], "text": "When the Habsburg Reminder Card is revealed, on each board, add 1 [City] to a Coastal land without [City] and 1 [Town] to the 3 Inland lands with the fewest [Blight]." },
     { "ref": "hlc6", "adv": "hlc", "type": "level", "lvl": 6, "name": "Far-Flung Herds", "timing": ["ravage"], "order": [2565], "text": "Ravages do +2 Damage (total) if any adjacent lands have [Town].", "xtext": "(This does not cause lands without Invaders to Ravage.)" }
 ],
-"invs": [{"n": "H", "t": "Habsburg Reminder Card"}]
+"invs": [{"n": "H", "t": "Habsburg Reminder"}]
 },
 {
 "adv": "rus",

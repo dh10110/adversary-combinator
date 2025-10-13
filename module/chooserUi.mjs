@@ -1,5 +1,5 @@
 import officialData from "../data/adversaries.json" with { type: "json" };
-import { SelPair } from "./models.mjs";
+import { SelAdv, SelPair } from "./models.mjs";
 import { combineAdversaries } from "./effectUi.mjs";
 
 const selections = new SelPair();
@@ -42,11 +42,63 @@ function refreshSelectionDisplay(mode) {
         $selButton.dataset.sel = mode;
     }
 
+    //Combine Button
+    const $combine = document.getElementById('combine-button');
+    $combine.dataset[mode] = adv === 'NONE' ? null : 'y';
 }
 
 function refreshLevelSlider(mode) {
     const $slider = document.querySelector(`.adversary-selection [data-mode="${mode}"] input[type="range"]`);
     $slider.value = selections[mode].level;
+}
+
+function refreshDifficulty() {
+    const $diff = document.getElementById('combined-difficulty');
+    $diff.innerText = computeDifficulty();
+}
+
+function computeDifficulty() {
+    const hasLeader = selections.leader.adversary !== null;
+    const hasSupport = selections.follow.adversary !== null;
+
+    let diffLead = 0;
+    let diffSupport = 0;
+
+    if (hasLeader) {
+        diffLead = lookupDiff(selections.leader);
+    }
+
+    if (hasSupport) {
+        diffSupport = lookupDiff(selections.follow);
+    }
+
+    if (diffSupport === 0) { return diffLead; }
+    if (diffLead === 0) { return diffSupport; }
+
+    //Combined = Bigger + 50%-75% of lesser
+    const [min, max] = minmax(diffLead, diffSupport);
+
+    const lb = Math.round(min * 0.5);
+    const ub = Math.round(min * 0.75);
+
+    if (lb === ub) { return max + lb; }
+    return `${max+lb}-${max+ub}`;
+}
+
+function minmax(value1, value2) {
+    if (value1 > value2) { return [value2, value1]; }
+    return [value1, value2];
+}
+
+function lookupDiff(adv, lvl) {
+    if (adv instanceof SelAdv) { return lookupDiff(adv.adversary, adv.level); }
+
+    const adversary = officialData.find(x => x.adv === adv);
+    if (!adversary) { return 0; }
+    if (!lvl) { return adversary.diff; }
+
+    const level = adversary.levels.find(x => x.lvl === lvl);
+    return level.diff || adversary.diff;
 }
 
 
@@ -113,6 +165,7 @@ function wireDialog($dialog) {
         const mode = $dialog.dataset.mode;
         selections[mode].adversary = adv;
         refreshSelectionDisplay(mode);
+        refreshDifficulty();
         $dialog.close();
     });
 
@@ -132,6 +185,7 @@ function wireLevelSlider(mode) {
         const val = parseInt($slider.value);
         selections[mode].level = val;
         refreshSelectionDisplay(mode);
+        refreshDifficulty();
     });
 }
 

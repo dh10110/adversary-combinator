@@ -206,6 +206,12 @@ export function combineAdversaries(selection) {
     //Other Effects
     showEffects(timingTree.children['1000'], $setup, follow);
     showEffects(timingTree.children['2000'], $play, follow);
+
+    //Show and Scroll
+    document.getElementById('play-effects').style.display = '';
+    const c = document.getElementById('setup-effects');
+    c.style.display = '';
+    c.scrollIntoView(true);
 }
 
 /**
