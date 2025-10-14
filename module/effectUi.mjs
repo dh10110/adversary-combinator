@@ -228,13 +228,9 @@ export function combineAdversaries(selection) {
 
     //Show Effects
     document.getElementById('play-effects').style.display = null;
-    const c = document.getElementById('setup-effects');
-    c.style.display = null;
-    //c.scrollIntoView(true);
-
+    document.getElementById('setup-effects').style.display = null;
+    //Close chooser
     const d = document.getElementById('chooser-page');
-    const s = d.querySelector('summary .when-closed');
-    s.innerHTML = buildSelectionTitle(leader, follow, selection);
     d.open = null;
 }
 

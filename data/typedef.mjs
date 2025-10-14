@@ -1,4 +1,4 @@
-//#region Timing TypeDefs
+//#region Timing
 
 /**
  * Data item from timing.json
@@ -9,7 +9,7 @@
 
 //#endregion
 
-//#region Adversary TypeDefs
+//#region Adversary
 
 /**
  * Adversary from json
@@ -20,13 +20,13 @@
  * @property {string} htmlname - Adversary full name, with HTML formatting
  * @property {number} diff - Adversary base difficulty
  * @property {string} set - Set code where adversary released
- * @property {AdversaryLeveDataModel[]} levels - Details about each level of the adversary
+ * @property {AdversaryLevelDataModel[]} levels - Details about each level of the adversary
  * @property {AdversaryEffectDataModel[]} effects - All effects applied by the adversary
  */
 
 /**
  * Adversary Level from json
- * @typedef {Object} AdversaryLeveDataModel
+ * @typedef {Object} AdversaryLevelDataModel
  * @property {string} adv - Adversary ID Code
  * @property {number} lvl - Adversary level
  * @property {number} diff - Adversary difficulty at level

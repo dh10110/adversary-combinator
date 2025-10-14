@@ -1,19 +1,24 @@
 import officialData from "../data/adversaries.json" with { type: "json" };
-import { SelAdv, SelPair } from "./models.mjs";
+import { SelectedAdversaries } from "./models.mjs";
 import { combineAdversaries } from "./effectUi.mjs";
+import { getAllAdversaries } from "./dataAccess.mjs";
 
-const selections = new SelPair();
+//const selections = new SelPair();
+const selections = new SelectedAdversaries();
+
+const MODE_LEADING = 'leading';
+const MODE_SUPPORTING = 'supporting';
 
 function refreshSelectionsDisplay() {
-    refreshSelectionDisplay('leader');
-    refreshSelectionDisplay('follow');
+    refreshSelectionDisplay(MODE_LEADING);
+    refreshSelectionDisplay(MODE_SUPPORTING);
 }
 
 function refreshSelectionDisplay(mode) {
     const $chooser = document.querySelector(`.adversary-selection > [data-mode="${mode}"]`);
     const sel = selections[mode];
 
-    const adv = sel.adversary || 'NONE';
+    const adv = sel.adv || 'NONE';
     $chooser.dataset.adv = adv;
     
     const $btn = $chooser.querySelector('button');
@@ -25,9 +30,10 @@ function refreshSelectionDisplay(mode) {
         $level.textContent = '';
         $btn.style.removeProperty('--flag-bg');
     } else {
-        const a = officialData.find(a => a.adv === adv);
-        $name.innerHTML = a.htmlname;
-        $level.innerHTML = `Level <b>${sel.level}</b>`;
+        //const a = officialData.find(a => a.adv === adv);
+        //const a = sel.
+        $name.innerHTML = sel.adversary.htmlname;
+        $level.innerHTML = `Level <b>${sel.lvl}</b>`;
         $btn.style.setProperty('--flag-bg', `url('./img/flag-svg/${a.adv}.svg')`);
     }
 
@@ -42,10 +48,16 @@ function refreshSelectionDisplay(mode) {
         $selButton.dataset.sel = mode;
     }
 
+    //details summary (closed)
+    const $details = document.getElementById('chooser-page');
+    const $summaryClosed = $details.querySelector('summary .when-closed');
+    $summaryClosed.innerHTML = selections.getSummaryTitle();
+
     //Combine Button
     const $combine = document.getElementById('combine-button');
     $combine.dataset[mode] = adv === 'NONE' ? null : 'y';
 }
+
 
 function refreshLevelSlider(mode) {
     const $slider = document.querySelector(`.adversary-selection [data-mode="${mode}"] input[type="range"]`);
@@ -107,8 +119,8 @@ export function initializeChooserUi() {
     fillAdversaryList($dialog);
     wireDialog($dialog);
     wireSwapButton();
-    wireLevelSlider('leader');
-    wireLevelSlider('follow');
+    wireLevelSlider(MODE_LEADING);
+    wireLevelSlider(MODE_SUPPORTING);
     wireCombineButton();
 }
 
@@ -119,8 +131,35 @@ const divFollowerTag = `
     <div data-mode="follow" title="Follower Adversary">▲</div>
 `;
 
+const divLeadingTag = `
+    <div data-mode="${MODE_LEADING}" title="Leading Adversary">⬢</div>
+`;
+const divSupportingTag = `
+    <div data-mode="${MODE_SUPPORTING}" title="Supporting Adversary">▲</div>
+`;
+
 function fillAdversaryList($dialog) {
     const $ul = $dialog.querySelector('ul');
+
+    const adversaries = getAllAdversaries(true);
+    for (const a of adversaries) {
+        const advId = a.adv || a.nickname;
+        const $li = document.createElement('li');
+        li.innerHTML = `
+            <button type="submit" class="advflag flag-button" data-adv="${advId}" title="${a.fullname}"
+                    style="">
+                <div class="flag-text">
+                    <div>${a.htmlname}</div>
+                </div>
+                ${divLeadingTag}
+                ${divSupportingTag}
+            </button>
+        `;
+        $ul.appendChild(li);
+    }
+
+    return;
+    //TODO: Delete below
 
     //No Adversary
     const li = document.createElement('li');
@@ -147,12 +186,16 @@ function fillAdversaryList($dialog) {
 function wireSwapButton() {
     const $swap = document.getElementById('swap-adversaries');
     $swap.addEventListener('click', e => {
+        /*
         const temp = selections.leader;
         selections.leader = selections.follow;
         selections.follow = temp;
+        */
+        [selections.leading, selections.supporting]
+            = [selections.supporting, selections.leading];
         refreshSelectionsDisplay();
-        refreshLevelSlider('leader');
-        refreshLevelSlider('follow');
+        refreshLevelSlider(MODE_LEADING);
+        refreshLevelSlider(MODE_SUPPORTING);
     });
 }
 
@@ -172,7 +215,7 @@ function wireDialog($dialog) {
     const $choosers = document.querySelectorAll('.adversary-selection > [data-mode]');
     $choosers.forEach($c => {
         const $button = $c.querySelector('button');
-        $button.addEventListener('click', () => {
+        $button.addEventListener('click', e => {
             $dialog.dataset.mode = $c.dataset.mode;
             $dialog.showModal();
         });

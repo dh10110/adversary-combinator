@@ -1,10 +1,4 @@
 
-export class AdversaryIndex {
-    constructor() {
-        makeIndex(adversaries, 'adv');
-    }
-}
-
 export class Adversary {
     /**
      * Build an Adversary object from the data source.
@@ -24,27 +18,24 @@ export class Adversary {
         this.effects = data.effects.map(x => new Effect(x));
     }
 
-
-}
-
-function makeIndex(array, indexProperty) {
-    const obj = {};
-    for (const a of array) {
-        const key = a[indexProperty];
-        obj[key] = a;
+    * effectsUpToLevel(lvl) {
+        for (const eff of this.effects) {
+            if (eff.lvl <= lvl) {
+                yield lvl;
+            }
+        }
     }
-    return obj;
 }
-
 
 export class Level {
     /**
      * 
-     * @param {import("../data/typedef.mjs").AdversaryLeveDataModel} data 
+     * @param {import("../data/typedef.mjs").AdversaryLevelDataModel} data 
      */
     constructor(data) {
         this.lvl = data.lvl;
-
+        this.diff = data.diff;
+        this.fear = data.fear;
     }
 }
 
@@ -54,6 +45,16 @@ export class Effect {
      * @param {import("../data/typedef.mjs").AdversaryEffectDataModel} data 
      */
     constructor(data) {
-
+        this.ref = data.ref;
+        this.adv = data.adv;
+        this.lvl = data.lvl;
+        this.type = data.type;
+        this.name = data.name;
+        this.order = data.order;
+        this.text = data.text;
+        this.xtext = data.xtext;
+        this.itext = data.itext;
+        this.inv = data.inv;
+        this.repl = data.repl;
     }
 }
