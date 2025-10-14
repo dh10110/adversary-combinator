@@ -155,6 +155,25 @@ function addFear(l, f) {
 }
 
 
+function buildSelectionTitle(leading, supporting, selection) {
+    if (!leading.nickname && !supporting.nickname) {
+        return '<b>No Adversary</b> Difficulty 0';
+    }
+
+    var sb = [];
+
+    if (leading.nickname) {
+        sb.push('<b>', leading.nickname, ' ', selection.leader.level, '</b>');
+    }
+    if (leading.nickname && supporting.nickname) { sb.push(' '); }
+    if (supporting.nickname) {
+        sb.push('<b>', supporting.nickname, ' ', selection.follow.level, '</b>');
+    }
+
+    return sb.join('');
+}
+
+
 /**
  * Combine the selected adversaries
  * @param {SelPair} selection 
@@ -207,11 +226,16 @@ export function combineAdversaries(selection) {
     showEffects(timingTree.children['1000'], $setup, follow);
     showEffects(timingTree.children['2000'], $play, follow);
 
-    //Show and Scroll
-    document.getElementById('play-effects').style.display = '';
+    //Show Effects
+    document.getElementById('play-effects').style.display = null;
     const c = document.getElementById('setup-effects');
-    c.style.display = '';
-    c.scrollIntoView(true);
+    c.style.display = null;
+    //c.scrollIntoView(true);
+
+    const d = document.getElementById('chooser-page');
+    const s = d.querySelector('summary .when-closed');
+    s.innerHTML = buildSelectionTitle(leader, follow, selection);
+    d.open = null;
 }
 
 /**

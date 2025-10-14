@@ -6,14 +6,19 @@
     --theme-color: #8A00C4;
     --header-bg: var(--theme-color);
     --header-fg: #fafafa;
+    --hover-bg: oklch(95% 0 0);
+
     --leader-color: var(--theme-color);
     --follower-color: oklch(from var(--theme-color) l c 120);
     --loss-color: oklch(from var(--theme-color) l c 30);
     --theme-grey: oklch(from var(--theme-color) l 0 0);
 
+    interpolate-size: allow-keywords;
+
     @media (prefers-color-scheme: dark) {
         --bg: #1a1a1a;
         --fg: #f0f0f0;
+        --hover-bg: oklch(25% 0 0);
     }
 }
 
@@ -67,6 +72,60 @@ button, input { font: inherit; }
 
 button { cursor: pointer; }
 [type="range"] { cursor: pointer; }
+
+
+details {
+    --toggle-duration: 200ms;
+
+    & > summary {
+        list-style-position: outside;
+        margin-inline-start: 1rem;
+        cursor: pointer;        
+        font-size: 115%;
+        padding: 0.4em;
+        border-radius: 5px;
+
+        &::marker {
+            color: oklch(60% 0 0);
+        }
+
+        &:hover {
+            background-color: var(--hover-bg);
+        }
+ 
+        & > h2 { 
+            margin: 0;
+            display: inline;
+            font-size: inherit;
+        }
+    }
+
+    &::details-content {
+        padding-top: 0.5em;
+
+        transition: opacity var(--toggle-duration),
+            content-visibility var(--toggle-duration) allow-discrete,
+            block-size var(--toggle-duration) ease-out;
+    }
+
+    &:not([open])::details-content {
+        opacity: 0;
+        block-size: 0;
+    }
+    &[open]::details-content {
+        content-visibility: visible;
+        opacity: 1;
+        block-size: auto;
+    }
+
+    &[open] > summary > .when-closed {
+        display: none;
+    }
+    &:not([open]) > summary > .when-open {
+        display: none;
+    }
+
+}
 
 
 .adversary-selection {
@@ -274,8 +333,10 @@ button { cursor: pointer; }
     max-width: 1em;
     max-height: 1em;
 
-    @media (prefers-color-scheme: dark) {
-        filter: invert();
+    &:not(.icon-colored) {
+        @media (prefers-color-scheme: dark) {
+            filter: invert();
+        }
     }
 }
 .inline-range {
@@ -288,6 +349,12 @@ button { cursor: pointer; }
     text-align: center;
     font-size: large;
     font-weight: bold;
+
+    @media (prefers-color-scheme: dark) {
+        color: black; /* todo: separate text from icon element*/
+        filter: invert();
+    }
+
 }
 
 .keep-together {
@@ -303,7 +370,9 @@ button { cursor: pointer; }
 
     --flag-bg: url(./img/flag-svg/none.svg);
 
-    background-image: radial-gradient(rgb(from white r g b / 50%) 0%, rgb(from white r g b / 20%) 100%),
+    color: var(--fg);
+    background-color: var(--bg);
+    background-image: radial-gradient(rgb(from var(--bg) r g b / 50%) 0%, rgb(from var(--bg) r g b / 20%) 100%),
         var(--flag-bg);
     background-position: center;
     background-size: cover;

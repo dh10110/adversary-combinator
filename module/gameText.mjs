@@ -34,9 +34,10 @@ function iconHtml(iconName) {
         case 'Strife':
         case 'Presence':
         case 'SacredSite':
+            return `<img src="./img/icon/${iconName}.svg" class="icon" alt="${iconName}" title="${iconName}">`;
         case 'Fast':
         case 'Slow':
-            return `<img src="./img/icon/${iconName}.svg" class="icon" alt="${iconName}" title="${iconName}">`;
+            return `<img src="./img/icon/${iconName}.svg" class="icon icon-colored" alt="${iconName}" title="${iconName}">`;
         default:
             return null;
     }
