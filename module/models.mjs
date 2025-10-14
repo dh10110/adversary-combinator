@@ -17,8 +17,9 @@ export class SelPair {
 export class SelectedAdversary {
     constructor() {
         this.adv = null;
-        this.level = 1;
+        this.lvl = 1;
     }
+
 
     isSelected() {
         return this.adv !== null;

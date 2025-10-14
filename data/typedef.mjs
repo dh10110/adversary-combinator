@@ -17,6 +17,7 @@
  * @property {string} adv - Adversary ID Code
  * @property {string} nickname - Adversary nickname
  * @property {string} fullname - Adversary full name
+ * @property {string} htmlname - Adversary full name, with HTML formatting
  * @property {number} diff - Adversary base difficulty
  * @property {string} set - Set code where adversary released
  * @property {AdversaryLeveDataModel[]} levels - Details about each level of the adversary
