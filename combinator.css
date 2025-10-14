@@ -8,8 +8,8 @@
     --header-fg: #fafafa;
     --hover-bg: oklch(95% 0 0);
 
-    --leader-color: var(--theme-color);
-    --follower-color: oklch(from var(--theme-color) l c 120);
+    --leading-color: var(--theme-color);
+    --supporting-color: oklch(from var(--theme-color) l c 120);
     --loss-color: oklch(from var(--theme-color) l c 30);
     --theme-grey: oklch(from var(--theme-color) l 0 0);
 
@@ -43,7 +43,7 @@ body {
         padding-bottom: 0.5em;
         background-color: var(--header-bg);
         color: var(--header-fg);
-        background-image: linear-gradient(to right, var(--leader-color), var(--follower-color));
+        background-image: linear-gradient(to right, var(--leading-color), var(--supporting-color));
 
         h1 {
             margin: 0;
@@ -150,11 +150,11 @@ details {
         display: grid;
         grid-template-rows: auto 1fr auto;
 
-        &#leader-selection {
-            --local-color: var(--leader-color);
+        &#leading-selection {
+            --local-color: var(--leading-color);
         }
-        &#follower-selection {
-            --local-color: var(--follower-color);
+        &#supporting-selection {
+            --local-color: var(--supporting-color);
             > h2 {
                 text-align: right;
             }
@@ -230,11 +230,11 @@ details {
     button {
         --sel-color: silver;
 
-        &[data-sel=leader] {
-            --sel-color: var(--leader-color);
+        &[data-sel=leading] {
+            --sel-color: var(--leading-color);
         }
-        &[data-sel=follow] {
-            --sel-color: var(--follower-color);
+        &[data-sel=supporting] {
+            --sel-color: var(--supporting-color);
         }
 
         &[data-sel] {
@@ -245,23 +245,23 @@ details {
         & [data-mode] {
             display: none;
         }
-        &[data-sel=leader] [data-mode=leader],
-        &[data-sel=follow] [data-mode=follow] {
+        &[data-sel=leading] [data-mode=leading],
+        &[data-sel=supporting] [data-mode=supporting] {
             display: block;
             color: var(--sel-color);
         }   
     }
 
     
-    &[data-mode=leader] {
-        --local-color: var(--leader-color);
+    &[data-mode=leading] {
+        --local-color: var(--leading-color);
     }
-    &[data-mode=follow] {
-        --local-color: var(--follower-color);
+    &[data-mode=supporting] {
+        --local-color: var(--supporting-color);
     }
 
     &::backdrop {
-        background-color: rgb(from var(--local-color) r g b / 0.3);
+        background-color: oklch(from var(--local-color) l c h / 0.3);
     }
 
 }
@@ -319,10 +319,10 @@ details {
         --gradient-alpha: 1.0;
     }
     &[data-leader=y] {
-        --clr2: var(--leader-color);
+        --clr2: var(--leading-color);
     }
     &[data-follow=y] {
-        --clr1: var(--follower-color);
+        --clr1: var(--supporting-color);
     }
 }
 
@@ -450,7 +450,7 @@ details {
         padding-left: 3px;
     }
     &.effect-type-esc {
-        border-left: 5px solid var(--leader-color);
+        border-left: 5px solid var(--leading-color);
         padding-left: 3px;
     }
     &.effect-type-mult {
