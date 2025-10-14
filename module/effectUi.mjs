@@ -1,7 +1,7 @@
 import officialData from "../data/adversaries.json" with { type: "json" };
 import { enhanceGameText } from "./gameText.mjs";
 import { InvaderDeckList } from "./invDeck.mjs";
-import { SelAdv, SelPair } from "./models.mjs";
+import { SelAdv, SelectedAdversaries, SelPair } from "./models.mjs";
 import { buildTimingTree, TimingPeriod } from "./timing.mjs";
 
 /**
@@ -154,29 +154,9 @@ function addFear(l, f) {
     return fear;
 }
 
-
-function buildSelectionTitle(leading, supporting, selection) {
-    if (!leading.nickname && !supporting.nickname) {
-        return '<b>No Adversary</b> Difficulty 0';
-    }
-
-    var sb = [];
-
-    if (leading.nickname) {
-        sb.push('<b>', leading.nickname, ' ', selection.leader.level, '</b>');
-    }
-    if (leading.nickname && supporting.nickname) { sb.push(' '); }
-    if (supporting.nickname) {
-        sb.push('<b>', supporting.nickname, ' ', selection.follow.level, '</b>');
-    }
-
-    return sb.join('');
-}
-
-
 /**
  * Combine the selected adversaries
- * @param {SelPair} selection 
+ * @param {SelectedAdversaries} selection 
  */
 export function combineAdversaries(selection) {
     
@@ -185,19 +165,19 @@ export function combineAdversaries(selection) {
     //Put all the effects in Gameplay Timing Order
 
     const timingTree = buildTimingTree();
-    const leader = officialData.filter(x => x.adv === selection.leader.adversary)[0] || { effects: [] };
-    const follow = officialData.filter(x => x.adv === selection.follow.adversary)[0] || { effects: [] };
+    const leading = selection.leading.adversary;
+    const supporting = selection.supporting.adversary;
 
     //Add all the effects in the order of leader, then follower,
     //   except for invader deck changes where the leader changes are done last
     const leaderInv = [];
-    leader.effects.forEach(e => {
-        if (e.lvl > selection.leader.level) { return; }
+    leading.effects.forEach(e => {
+        if (e.lvl > selection.leading.lvl) { return; }
         if (e.inv) { leaderInv.push(e); return; }
         timingTree.addEffect(e);
     });
-    follow.effects.forEach(e => {
-        if (e.lvl > selection.follow.level) { return; }
+    supporting.effects.forEach(e => {
+        if (e.lvl > selection.supporting.lvl) { return; }
         timingTree.addEffect(e);
     })
     leaderInv.forEach(e => {
@@ -211,20 +191,20 @@ export function combineAdversaries(selection) {
     $play.innerHTML = '';
 
     //Invader Deck
-    const addedCards = [...leader.invs || [], ...follow.invs || []];
+    const addedCards = [...leading.invs || [], ...supporting.invs || []];
     var invDeck = makeInvaderDeck(timingTree, addedCards);
     $setup.appendChild(makeInvaderDeckElement(invDeck));
 
     //Level for Fear
-    const leaderLevel = (leader.levels || []).filter(x => x.lvl === selection.leader.level)[0] || {};
-    const followLevel = (follow.levels || []).filter(x => x.lvl === selection.follow.level)[0] || {};
+    const leadingLevel = (leading.levels || []).filter(x => x.lvl === selection.leading.lvl)[0] || {};
+    const supportingLevel = (supporting.levels || []).filter(x => x.lvl === selection.supporting.lvl)[0] || {};
     //Fear Deck
-    const fear = addFear(leaderLevel.fear, followLevel.fear);
+    const fear = addFear(leadingLevel.fear, supportingLevel.fear);
     $setup.appendChild(makeFearElement(fear));
 
     //Other Effects
-    showEffects(timingTree.children['1000'], $setup, follow);
-    showEffects(timingTree.children['2000'], $play, follow);
+    showEffects(timingTree.children['1000'], $setup, supporting);
+    showEffects(timingTree.children['2000'], $play, supporting);
 
     //Show Effects
     document.getElementById('play-effects').style.display = null;

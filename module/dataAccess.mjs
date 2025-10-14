@@ -49,9 +49,10 @@ export function getNullAdversary() {
 
 function makeAdversaryIndex() {
     const idx = {};
-    for (const a of getAll()) {
+    for (const a of getAllAdversaries()) {
         idx[a.adv] = a;
     }
+    return idx;
 }
 const adversaryIndex = makeAdversaryIndex();
 export function getAdversary(adv) {

@@ -1,7 +1,6 @@
+import { getNullAdversary, getAdversary } from "./dataAccess.mjs";
 
 //#region V1 Selection
-
-import { getNullAdversary, getAdversary } from "./dataAccess.mjs";
 
 export class SelAdv {
     constructor() {
@@ -59,7 +58,7 @@ export class SelectedAdversary {
             return;
         }
 
-        this.adv = adv;
+        this.adv = adversary.adv;
         this.adversary = adversary;
     }
 
@@ -69,7 +68,7 @@ export class SelectedAdversary {
 
     getDifficulty() {
         if (!this.adversary) { return 0; }
-        if (!lvl) { return this.adversary.diff; }
+        if (!this.lvl) { return this.adversary.diff; }
         const level = this.adversary.levels.find(x => x.lvl === this.lvl);
         return level && level.diff || this.adversary.diff;
     }
@@ -138,8 +137,8 @@ export class SelectedAdversaries {
         if (this.supporting.isSelected()) {
             sb.push(this.supporting.getSummaryTitle());
         }
-        sb.push('<span>Difficulty: ', computeDifficulty(), '</span>');
-        return sb.join(' ');
+        sb.push(`<span>Difficulty ${this.computeDifficulty()}</span>`);
+        return sb.join(' · ');
     }
 }
 

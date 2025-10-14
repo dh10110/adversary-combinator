@@ -318,10 +318,10 @@ details {
         filter: brightness(0.97);
         --gradient-alpha: 1.0;
     }
-    &[data-leader=y] {
+    &[data-leading=y] {
         --clr2: var(--leading-color);
     }
-    &[data-follow=y] {
+    &[data-supporting=y] {
         --clr1: var(--supporting-color);
     }
 }
@@ -391,14 +391,16 @@ details {
         z-index: 1;
     }
 
-    & > [data-mode="leader"] {
+    & > [data-mode="leading"] {
         align-self: end;
         justify-self: start;
+        text-shadow: white 0 0 1px, white 0 0 3px, white 0 0 6px;
     }
 
-    & > [data-mode="follow"] {
+    & > [data-mode="supporting"] {
         align-self: end;
         justify-self: end;
+        text-shadow: white 0 0 1px, white 0 0 3px, white 0 0 6px;
     }
 
     & .flag-text {
