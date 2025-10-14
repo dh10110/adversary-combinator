@@ -106,12 +106,16 @@ function fillAdversaryList($dialog) {
 function wireSwapButton() {
     const $swap = document.getElementById('swap-adversaries');
     $swap.addEventListener('click', e => {
-        [selections.leading, selections.supporting]
-            = [selections.supporting, selections.leading];
-        refreshSelectionsDisplay();
-        refreshLevelSlider(MODE_LEADING);
-        refreshLevelSlider(MODE_SUPPORTING);
+        doAdversarySwap();
     });
+}
+
+function doAdversarySwap() {
+    [selections.leading, selections.supporting]
+        = [selections.supporting, selections.leading];
+    refreshSelectionsDisplay();
+    refreshLevelSlider(MODE_LEADING);
+    refreshLevelSlider(MODE_SUPPORTING);
 }
 
 function wireDialog($dialog) {
@@ -150,6 +154,9 @@ function wireLevelSlider(mode) {
 function wireCombineButton() {
     const $combine = document.getElementById('combine-button');
     $combine.addEventListener('click', e => {
+        if (selections.supporting.isSelected() && !selections.leading.isSelected()) {
+            doAdversarySwap();
+        }
         combineAdversaries(selections);
     });
 }

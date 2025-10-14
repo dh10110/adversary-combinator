@@ -74,7 +74,7 @@ export class SelectedAdversary {
     }
 
     getSummaryTitle() {
-        if (this.adversary === null) {
+        if (this.adv === null) {
             return `<b>${this.adversary.fullname}</b>`;
         } else {
             return `<b>${this.adversary.nickname} ${this.lvl}</b>`;

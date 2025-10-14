@@ -1,7 +1,6 @@
-import officialData from "../data/adversaries.json" with { type: "json" };
 import { enhanceGameText } from "./gameText.mjs";
 import { InvaderDeckList } from "./invDeck.mjs";
-import { SelAdv, SelectedAdversaries, SelPair } from "./models.mjs";
+import { SelAdv, SelectedAdversaries } from "./models.mjs";
 import { buildTimingTree, TimingPeriod } from "./timing.mjs";
 
 /**
@@ -26,20 +25,23 @@ export function makeElement(tag, htmlContent, classes) {
 
 /**
  * Make an HTML Element for an Adversary Effect
- * @param {import('../data/typedef.mjs').AdversaryEffectDataModel} e 
- * @param {SelAdv} follow 
+ * @param {import('../data/typedef.mjs').AdversaryEffectDataModel} e - effect
+ * @param {SelectedAdversaries} selection - Selected Adversaries (modifies display of escalation)
  * @returns {HTMLElement} Created HTML Element
  */
-export function makeEffectElement(e, follow) {
+export function makeEffectElement(e, selection) {
+    const supporting = selection.supporting;
+    const isSupporting = e.adv === (supporting && supporting.adv || '');
+    const effSrc = isSupporting ? 'S' : 'L';
     const html = `
     <span class="altag">
         <span class="altag_flag" style="--flag-bg: url('./img/flag-svg/${e.adv}.svg')"></span>
         <output class="altag_level">${e.lvl}</output>
     </span>
-    <div class="effect-detail effect-type-${e.type}">
+    <div class="effect-detail effect-type-${e.type} effect-src-${effSrc}">
         <div class="effect-name">
             ${e.type === 'loss' ? "Loss Condition" : ""}
-            ${e.type === 'esc' ? "Escalation " + (e.adv === (follow && follow.adv||'') ? "Ⅲ" : "<img class='icon' src='./img/icon/Escalation.svg'>") : ""}
+            ${e.type === 'esc' ? "Escalation " + (isSupporting ? "Ⅲ" : "<img class='icon' src='./img/icon/Escalation.svg'>") : ""}
         </div>
         <div>
             <span class="effect-name">${e.name}</span>
@@ -159,11 +161,8 @@ function addFear(l, f) {
  * @param {SelectedAdversaries} selection 
  */
 export function combineAdversaries(selection) {
-    
-    //TODO: Handle weird input
 
     //Put all the effects in Gameplay Timing Order
-
     const timingTree = buildTimingTree();
     const leading = selection.leading.adversary;
     const supporting = selection.supporting.adversary;
@@ -203,8 +202,8 @@ export function combineAdversaries(selection) {
     $setup.appendChild(makeFearElement(fear));
 
     //Other Effects
-    showEffects(timingTree.children['1000'], $setup, supporting);
-    showEffects(timingTree.children['2000'], $play, supporting);
+    showEffects(timingTree.children['1000'], $setup, selection);
+    showEffects(timingTree.children['2000'], $play, selection);
 
     //Show Effects
     document.getElementById('play-effects').style.display = null;
@@ -218,17 +217,18 @@ export function combineAdversaries(selection) {
  * Show all the effects in a Timing Period
  * @param {TimingPeriod} period - Timing Period to show
  * @param {Element} $box - Element to fill
- * @param {SelAdv} follow - The follow Adversary (to handle Escalation properly)
+ * @param {SelectedAdversaries} selection - the selected adversaries (modifies display of escalation, multi)
  */
-function showEffects(period, $box, follow) {
-    const effects = Array.from(period.iterateEffects());
+function showEffects(period, $box, selection) {
+    const isMulti = selection.isMultiAdversary();
+    const effects = Array.from(period.iterateEffects(isMulti));
     if (effects.length > 0) {
         $box.appendChild(makeElement('h3', period.title, 'effect-header'));
-        effects.forEach(e => $box.appendChild(makeEffectElement(e, follow)));
+        effects.forEach(e => $box.appendChild(makeEffectElement(e, selection)));
     }
 
     for (const key in period.children) {
-        showEffects(period.children[key], $box, follow);
+        showEffects(period.children[key], $box, selection);
     }
 }
 

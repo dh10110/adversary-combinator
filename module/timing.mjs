@@ -60,13 +60,17 @@ export class TimingPeriod {
 
     /**
      * Iterate the effects contained directly in this timing period.
+     * @param {boolean} isMulti - include multiple adversary effects.
      * @yields {AdversaryEffectDataModel} - Next effect
      */
-    * iterateEffects() {
+    * iterateEffects(isMulti) {
         for (const key in this.effects) {
             const arr = this.effects[key];
             for (let i = 0; i < arr.length; i += 1) {
-                yield arr[i];
+                let eff = arr[i];
+                if (isMulti || eff.type !== 'mult') {
+                    yield arr[i];
+                }
             }
         }
     }

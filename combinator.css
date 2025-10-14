@@ -454,9 +454,12 @@ details {
     &.effect-type-esc {
         border-left: 5px solid var(--leading-color);
         padding-left: 3px;
+        &.effect-src-S {
+            border-left-color: var(--supporting-color);
+        }
     }
     &.effect-type-mult {
-        border-left: 5px solid var(--theme-gray);
+        border-left: 5px solid var(--theme-grey);
         padding-left: 3px;
     }
 }
