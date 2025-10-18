@@ -136,22 +136,22 @@ function enhanceText(text) {
 }
 
 /**
- * Add 2 fear arrays to the default
- * @param {FearArray} l - leader's fear array
- * @param {FearArray} f - follower's fear array
+ * Add up to 2 fear arrays to the default
+ * @param {FearArray} fearA - first fear array (optional)
+ * @param {FearArray} fearB - second fear array (optional)
  * @returns {FearArray}
  */
-function addFear(l, f) {
+function addFear(fearA, fearB) {
     const fear = [3, 3, 3];
-    if (l && l.length === 3) {
-        fear[0] += l[0];
-        fear[1] += l[1];
-        fear[2] += l[2];
+    if (fearA && fearA.length === 3) {
+        fear[0] += fearA[0];
+        fear[1] += fearA[1];
+        fear[2] += fearA[2];
     }
-    if (f && f.length === 3) {
-        fear[0] += f[0];
-        fear[1] += f[1];
-        fear[2] += f[2];
+    if (fearB && fearB.length === 3) {
+        fear[0] += fearB[0];
+        fear[1] += fearB[1];
+        fear[2] += fearB[2];
     }
     return fear;
 }

@@ -136,9 +136,19 @@ function wireDialog($dialog) {
         const $button = $c.querySelector('button');
         $button.addEventListener('click', e => {
             $dialog.dataset.mode = $c.dataset.mode;
+            const $hdrout = $dialog.querySelector('output');
+            $hdrout.innerText = modeTitle($c.dataset.mode);
             $dialog.showModal();
         });
     });
+}
+
+function modeTitle(mode) {
+    switch(mode) {
+        case MODE_LEADING: return "Leading";
+        case MODE_SUPPORTING: return "Supporting";
+        default: return "";
+    }
 }
 
 function wireLevelSlider(mode) {

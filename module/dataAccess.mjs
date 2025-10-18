@@ -39,7 +39,7 @@ export function getNullAdversary() {
         adv: null,
         nickname: 'NONE',
         fullname: 'No Adversary',
-        htmlname: '<b>No Adversary</b>',
+        htmlname: 'No Adversary',
         diff: 0,
         set: 'base',
         levels: [],

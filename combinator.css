@@ -1,25 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-    --bg: #ffffff;
-    --fg: #333333;
+    interpolate-size: allow-keywords;
+
+    color-scheme: light;    
+
     --theme-color: #8A00C4;
     --header-bg: var(--theme-color);
-    --header-fg: #fafafa;
-    --hover-bg: oklch(95% 0 0);
-
     --leading-color: var(--theme-color);
     --supporting-color: oklch(from var(--theme-color) l c 120);
     --loss-color: oklch(from var(--theme-color) l c 30);
     --theme-grey: oklch(from var(--theme-color) l 0 0);
 
-    interpolate-size: allow-keywords;
+    --hover-bg: color-mix(in oklch, Canvas, gray 10%);
 
     @media (prefers-color-scheme: dark) {
-        --bg: #1a1a1a;
-        --fg: #f0f0f0;
-        --hover-bg: oklch(25% 0 0);
+        color-scheme: dark;    
     }
+
+}
+
+:fullscreen {
+    background-color: Canvas;
+    padding: 1em;
 }
 
 h1, h2, h3 {
@@ -27,23 +30,27 @@ h1, h2, h3 {
     margin: 0.2em 0 0;
 }
 
+h1 { font-size: 125%; }
+h2 { font-size: 120%; }
+h3 { font-size: 115%; }
+
 body {
     margin: 0;
     padding: 0;
     font-family: "Noto Sans", sans-serif;
     font-optical-sizing: auto;
-    background-color: var(--bg);
-    color: var(--fg);
     min-block-size: 100vb;
     display: grid;
     grid-template-rows: auto 1fr auto;
     
     > header {
+        color-scheme: dark;
+        color: CanvasText;
+        background-color: var(--header-bg);
+        background-image: linear-gradient(to right, var(--leading-color), var(--supporting-color));
+
         padding: 0.75em;
         padding-bottom: 0.5em;
-        background-color: var(--header-bg);
-        color: var(--header-fg);
-        background-image: linear-gradient(to right, var(--leading-color), var(--supporting-color));
 
         h1 {
             margin: 0;
@@ -70,7 +77,10 @@ body {
 
 button, input { font: inherit; }
 
-button { cursor: pointer; }
+button {
+    cursor: pointer;
+    &:active { transform: translate(2px, 2px); }
+ }
 [type="range"] { cursor: pointer; }
 
 
@@ -81,7 +91,7 @@ details {
         list-style-position: outside;
         margin-inline-start: 1rem;
         cursor: pointer;        
-        font-size: 115%;
+        line-height: 1.2em;
         padding: 0.4em;
         border-radius: 5px;
 
@@ -96,7 +106,6 @@ details {
         & > h2 { 
             margin: 0;
             display: inline;
-            font-size: inherit;
         }
     }
 
@@ -184,19 +193,19 @@ details {
 }
 
 .adversary-selection > dialog {
-    --local-color: #888;
-    background-color: var(--bg);
-    color: var(--fg);
+    --local-color: var(--theme-grey);
     border-color: var(--local-color);
     padding: 0;
 
     > header {
+        color-scheme: only dark;
+        color: CanvasText;
         background-color: var(--local-color);
-        color: var(--header-fg);
         margin: auto;
+
         > h2 {
             margin: 0;
-            font-size: normal;
+            padding: 0.1em;
         }
     }
     ul {
@@ -217,8 +226,6 @@ details {
         }
 
         > li {
-            /*min-width: 15ch;*/
-            /*width: 32%;*/
             aspect-ratio: 3/2;
             display: grid;
 
@@ -228,7 +235,8 @@ details {
         }
     }
     button {
-        --sel-color: silver;
+        --sel-color: light-dark(silver, var(--theme-grey));
+        border-color: var(--sel-color);
 
         &[data-sel=leading] {
             --sel-color: var(--leading-color);
@@ -238,7 +246,6 @@ details {
         }
 
         &[data-sel] {
-            border-color: var(--sel-color);
             outline: 1px solid var(--sel-color);
         }
 
@@ -370,19 +377,22 @@ details {
 
     --flag-bg: url(./img/flag-svg/none.svg);
 
-    color: var(--fg);
-    background-color: var(--bg);
-    background-image: radial-gradient(rgb(from var(--bg) r g b / 50%) 0%, rgb(from var(--bg) r g b / 20%) 100%),
+    background-image: radial-gradient(rgb(from Canvas r g b / 50%) 0%, rgb(from Canvas r g b / 20%) 100%),
         var(--flag-bg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    background-clip: border-box;
 
-    border: 1px solid silver;
+    border-color: light-dark(silver, var(--theme-grey));
     border-radius: 3px;
 
     &:hover {
         filter: brightness(0.97);
+
+        @media (prefers-color-scheme: dark) {
+            filter: brightness(1.05);
+        }
     }
 
 
@@ -406,8 +416,8 @@ details {
     & .flag-text {
         justify-self: center;
         padding: 1ch;
-        background-color: hsl(from var(--bg) h s l / 0.8);
-        color: var(--fg);
+        background-color: hsl(from Canvas h s l / 0.8);
+        /* color: var(--fg); */
         border: 1px solid hsl(0 0 0 / 0.8);
         border-color: rgb(from var(--local-color) r g b / 0.8);
         border-radius: 1ch;
@@ -447,20 +457,20 @@ details {
 }
 
 .effect-detail {
+    border-left: 5px solid color-mix(in oklab, Canvas, gray 20%);
+    padding-left: 3px;
+
     &.effect-type-loss {
         border-left: 5px solid var(--loss-color);
-        padding-left: 3px;
     }
     &.effect-type-esc {
         border-left: 5px solid var(--leading-color);
-        padding-left: 3px;
         &.effect-src-S {
             border-left-color: var(--supporting-color);
         }
     }
     &.effect-type-mult {
         border-left: 5px solid var(--theme-grey);
-        padding-left: 3px;
     }
 }
 .effect-name {

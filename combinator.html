@@ -32,7 +32,7 @@
 
             <section class="adversary-selection" data-mode="tbd">
 
-                <article id="leader-selection" data-mode="leading" data-adv="NONE">
+                <article id="leading-selection" data-mode="leading" data-adv="NONE">
                     <h2>Leading</h2>
                     <button class="flag-button" title="Select Leading Adversary">
                         <div class="flag-text">
@@ -46,7 +46,7 @@
                     </label>
                 </article>
 
-                <button id="swap-adversaries" title="Swap Leader and Follower">
+                <button id="swap-adversaries" title="Swap Leading and Supporting">
                     ↔
                 </button>
 
@@ -66,7 +66,7 @@
 
                 <dialog>
                     <header>
-                        <h2>Select <output/> Adversary</h2>
+                        <h2>Select <output></output> Adversary</h2>
                     </header>
                     <form>
                         <ul><!--Filled Dynamically--></ul>
@@ -84,24 +84,24 @@
         </details>
 
 
-        <section id="setup-effects" class="page effect-list" style="display: none;">
-            <h2>At Setup</h2>
+        <details open id="setup-effects" class="page effect-list" style="display: none;">
+            <summary><h2>During Setup</h2></summary>
 
             <div data-container="setup"><!--Filled Dynamically--></div>
 
-        </section>
+        </details>
 
-        <section id="play-effects" class="page effect-list" style="display: none;">
-            <h2>During Play</h2>
+        <details open id="play-effects" class="page effect-list" style="display: none;">
+            <summary><h2>During Play</h2></summary>
 
             <div data-container="play"><!--Filled Dynamically--></div>
 
-        </section>
+        </details>
 
-        <section  class="page effect-list" style="display: none;">
+        <details  class="page effect-list" style="display: none;">
             <h2>Debug Effects</h2>
             <div data-container="debug" id="debug"><!--Filled Dynamically--></div>
-        </section>
+        </details>
     </main>
 
     <footer>
